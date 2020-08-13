@@ -20,7 +20,7 @@ import {
   GoogleSignin,
   GoogleSigninButton,
   statusCodes,
-} from 'react-native-google-signin';
+} from '@react-native-community/google-signin';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
@@ -34,7 +34,7 @@ const LoginScreen = props => {
   const [loggedIn, setloggedIn] = useState(false);
   const [userInfo, setuserInfo] = useState([]);
 
-_signIn = async () => {
+  const _signIn = async () => {
   try {
     await GoogleSignin.hasPlayServices();
     const {accessToken, idToken} = await GoogleSignin.signIn();
@@ -53,6 +53,7 @@ _signIn = async () => {
       // play services not available or outdated
     } else {
       // some other error happened
+      alert('some other error happened');
     }
   }
 };
@@ -81,7 +82,7 @@ _getCurrentUserInfo = async () => {
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
   }, []);
-  signOut = async () => {
+  const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
@@ -168,11 +169,11 @@ _getCurrentUserInfo = async () => {
                 autoCapitalize="none"
                 keyboardType="email-address"
                 ref={ref => {
-                  this._emailinput = ref;
+                  _emailinput = ref;
                 }}
                 returnKeyType="next"
                 onSubmitEditing={() =>
-                  this._passwordinput && this._passwordinput.focus()
+                  _passwordinput && _passwordinput.focus()
                 }
                 blurOnSubmit={false}
               />
@@ -186,7 +187,7 @@ _getCurrentUserInfo = async () => {
                 placeholderTextColor="#F6F6F7"
                 keyboardType="default"
                 ref={ref => {
-                  this._passwordinput = ref;
+                  _passwordinput = ref;
                 }}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
@@ -214,7 +215,7 @@ _getCurrentUserInfo = async () => {
                   style={{width: 192, height: 48}}
                   size={GoogleSigninButton.Size.Wide}
                   color={GoogleSigninButton.Color.Dark}
-                  onPress={this._signIn}
+                  onPress={_signIn}
                 />
               }
             </View>
