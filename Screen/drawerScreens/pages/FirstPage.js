@@ -22,7 +22,7 @@ const FirstPage = ({ navigation }) => {
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('LoginScreen')}>
+            onPress={() => navigation.navigate('Draw roof')}>
             <Text>Draw roof</Text>
           </TouchableOpacity>
         </View>

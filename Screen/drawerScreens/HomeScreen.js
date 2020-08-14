@@ -15,6 +15,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import FirstPage from './pages/FirstPage';
 import SecondPage from './pages/SecondPage';
+import DrawRoofScreen from '../DrawRoofScreen';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -70,7 +71,9 @@ const HomeScreen = () => {
           headerTintColor: '#fff',
           headerTitleStyle: { fontWeight: 'bold' }
         }}>
+          
         <Stack.Screen name="TabStack" component={TabStack} options={{ title: ' e-Procurement' }}/>
+        <Stack.Screen name="Draw roof" component={DrawRoofScreen}></Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

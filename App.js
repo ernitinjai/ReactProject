@@ -14,6 +14,7 @@ import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import OtpVerification from './Screen/Components/OtpVerification';
+import DrawRoofScreen from './Screen/DrawRoofScreen';
 
 const Auth = createStackNavigator({
   //Stack Navigator for Login and Sign up Screen
@@ -62,6 +63,16 @@ const App = createSwitchNavigator({
     navigationOptions: {
       /* Hiding header for Navigation Drawer as we will use our custom header */
       headerShown: false,
+    },
+  },
+  DrawRoofScreen: {
+    screen : DrawRoofScreen,
+    navigationOptions: {
+      title: 'Draw Roof',
+      headerStyle: {
+        backgroundColor: '#307ecc',
+      },
+      headerTintColor: '#fff',
     },
   },
 });
