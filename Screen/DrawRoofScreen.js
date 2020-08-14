@@ -197,9 +197,9 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    alignItems: 'center'
   },
-  DrawRoofScreen: {
+  map: {
     ...StyleSheet.absoluteFillObject
   },
   bubble: {
@@ -222,14 +222,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 20,
     backgroundColor: 'transparent'
-  },
-  map: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
+  }
 })
 
 export default DrawRoofScreen
