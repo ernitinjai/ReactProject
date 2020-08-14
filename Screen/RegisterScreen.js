@@ -28,7 +28,9 @@ const RegisterScreen = props => {
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const handleSubmitButton = () => {
-    setErrortext('');
+
+   
+    /*setErrortext('');
     if (!userName) {
       alert('Please fill Name');
       return;
@@ -44,7 +46,7 @@ const RegisterScreen = props => {
     if (!userAddress) {
       alert('Please fill Address');
       return;
-    }
+    }*/
     //Show Loader
     setLoading(true);
     var dataToSend = {
@@ -79,6 +81,7 @@ const RegisterScreen = props => {
           setIsRegistraionSuccess(true);
           console.log('Registration Successful. Please Login to proceed');
         } else {
+          setIsRegistraionSuccess(true);
           setErrortext('Registration Unsuccessful');
         }
       })
@@ -104,8 +107,8 @@ const RegisterScreen = props => {
         <TouchableOpacity
           style={styles.buttonStyle}
           activeOpacity={0.5}
-          onPress={() => props.navigation.navigate('LoginScreen')}>
-          <Text style={styles.buttonTextStyle}>Login Now</Text>
+          onPress={() => props.navigation.navigate('DrawerNavigationRoutes')}>
+          <Text style={styles.buttonTextStyle}>Go to Home screen Now</Text>
         </TouchableOpacity>
       </View>
     );
@@ -142,11 +145,26 @@ const RegisterScreen = props => {
             />
           </View>
           <View style={styles.SectionStyle}>
+          <TextInput
+              style={styles.inputStyle}
+              onChangeText={UserName => setUserName(UserName)}
+              underlineColorAndroid="#FFFFFF"
+              placeholder="Enter Last Name"
+              placeholderTextColor="#F6F6F7"
+              autoCapitalize="sentences"
+              returnKeyType="next"
+              onSubmitEditing={() =>
+                this._emailinput && this._emailinput.focus()
+              }
+              blurOnSubmit={false}
+            />
+            </View>
+          <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
               onChangeText={UserEmail => setUserEmail(UserEmail)}
               underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Email"
+              placeholder="Enter Email or Mobile"
               placeholderTextColor="#F6F6F7"
               keyboardType="email-address"
               ref={ref => {
@@ -162,7 +180,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserAge => setUserAge(UserAge)}
               underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Age"
+              placeholder="Enter Password"
               placeholderTextColor="#F6F6F7"
               keyboardType="numeric"
               ref={ref => {
@@ -179,7 +197,7 @@ const RegisterScreen = props => {
               style={styles.inputStyle}
               onChangeText={UserAddress => setUserAddress(UserAddress)}
               underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Address"
+              placeholder="Confirm Password"
               placeholderTextColor="#F6F6F7"
               autoCapitalize="sentences"
               ref={ref => {

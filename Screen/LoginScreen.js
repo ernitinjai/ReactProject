@@ -4,6 +4,8 @@
 //Import React and Hook we needed
 import React, { useState,useEffect } from 'react';
 
+import { SliderBox } from "react-native-image-slider-box";
+
 //Import all required component
 import {
   StyleSheet,
@@ -33,6 +35,17 @@ const LoginScreen = props => {
 
   const [loggedIn, setloggedIn] = useState(false);
   const [userInfo, setuserInfo] = useState([]);
+
+  state = {
+    images: [
+      require("../Images/promo1.png"),
+      require("../Images/promo2.png"),
+      require("../Images/promo3.png"),
+      require("../Images/promo4.png"),
+      require("../Images/promo5.png"),
+      require('../Images/logo.png'),
+    ]
+  };
 
   const _signIn = async () => {
   try {
@@ -129,7 +142,7 @@ _getCurrentUserInfo = async () => {
         if (responseJson.msg=="Successful") {
           AsyncStorage.setItem('user_id', userEmail);
           console.log(userEmail);
-          props.navigation.navigate('DrawerNavigationRoutes');
+          props.navigation.navigate('OtpVerification');
         } else {
           setErrortext('Please check your email id or password');
           console.log('Please check your email id or password');
@@ -146,19 +159,18 @@ _getCurrentUserInfo = async () => {
     <View style={styles.mainBody}>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={{ marginTop: 100 }}>
+        <View style={{ marginTop: 0 }}>
           <KeyboardAvoidingView enabled>
-            <View style={{ alignItems: 'center' }}>
-              <Image
-                source={require('../Images/logo.png')}
-                style={{
-                  width: '50%',
-                  height: 100,
-                  resizeMode: 'contain',
-                  margin: 30,
-                }}
-              />
-            </View>
+          <View style={styles.container}>
+        <SliderBox
+          images={this.state.images}
+          autoplay
+          sliderBoxHeight={400}
+          onCurrentImagePressed={index =>
+            console.warn(`image ${index} pressed`)
+          }
+        />
+      </View>
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
@@ -208,11 +220,16 @@ _getCurrentUserInfo = async () => {
               onPress={() => props.navigation.navigate('RegisterScreen')}>
               New Here ? Register
             </Text>
+            <Text
+            style={styles.orTextStyle}
+              >
+              --------OR---------
+            </Text>
             <View style={styles.body}>
             <View style={styles.sectionContainer}>
               {
                 <GoogleSigninButton
-                  style={{width: 192, height: 48}}
+                  style={styles.googlebuttonStyle}
                   size={GoogleSigninButton.Size.Wide}
                   color={GoogleSigninButton.Color.Dark}
                   onPress={_signIn}
@@ -259,6 +276,17 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
+  googlebuttonStyle: {
+    borderWidth: 0,
+    color: '#FFFFFF',
+    height: 40,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 20,
+  },
   buttonTextStyle: {
     color: '#FFFFFF',
     paddingVertical: 10,
@@ -279,6 +307,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
+
+  orTextStyle: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    paddingTop:20,
+    paddingBottom:20,
+    fontSize: 14,
+  },
+
   errorTextStyle: {
     color: 'red',
     textAlign: 'center',

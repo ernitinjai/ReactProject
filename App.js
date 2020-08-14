@@ -13,11 +13,18 @@ import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import OtpVerification from './Screen/Components/OtpVerification';
 
 const Auth = createStackNavigator({
   //Stack Navigator for Login and Sign up Screen
   LoginScreen: {
     screen: LoginScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  OtpVerification: {
+    screen: OtpVerification,
     navigationOptions: {
       headerShown: false,
     },

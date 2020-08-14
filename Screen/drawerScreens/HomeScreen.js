@@ -41,7 +41,7 @@ function TabStack() {
         name="FirstPage"
         component={FirstPage}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Inquiry',
           // tabBarIcon: ({ color, size }) => (
           //   <MaterialCommunityIcons name="home" color={color} size={size} />
           // ),
@@ -50,7 +50,7 @@ function TabStack() {
         name="SecondPage"
         component={SecondPage}
         options={{
-          tabBarLabel: 'Setting',
+          tabBarLabel: 'O&M',
           // tabBarIcon: ({ color, size }) => (
           //   <MaterialCommunityIcons name="settings" color={color} size={size} />
           // ),
@@ -70,7 +70,7 @@ const HomeScreen = () => {
           headerTintColor: '#fff',
           headerTitleStyle: { fontWeight: 'bold' }
         }}>
-        <Stack.Screen name="TabStack" component={TabStack} options={{ title: 'Tab Stack' }}/>
+        <Stack.Screen name="TabStack" component={TabStack} options={{ title: ' e-Procurement' }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

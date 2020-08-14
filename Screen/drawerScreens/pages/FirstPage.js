@@ -6,25 +6,24 @@ import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-na
 const FirstPage = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
+      <View style={{ flex: 1, padding: 16,alignItems:"center" }}>
         <View
           style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems:"center",
+            flexDirection: 'row'
           }}>
           <Text
             style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 16
+              fontSize: 18,
+              textAlign: 'center'
+              
             }}>
-            Home{'\n'}(You are on FirstPage)
+            Add new Inquiry
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('SecondPage')}>
-            <Text>Go to settng Tab</Text>
+            onPress={() => navigation.navigate('LoginScreen')}>
+            <Text>Draw roof</Text>
           </TouchableOpacity>
         </View>
         <Text style={{ fontSize: 18, textAlign: 'center', color: 'grey' }}>
@@ -44,8 +43,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 10,
-    width: 300,
-    marginTop: 16,
+    marginLeft:20,
+    
   },
 });
 export default FirstPage;
