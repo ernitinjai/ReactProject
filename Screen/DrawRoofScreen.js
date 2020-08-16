@@ -4,7 +4,8 @@ import {
   View,
   Text,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  PermissionsAndroid
 } from 'react-native'
 
 import MapView, {
@@ -13,6 +14,8 @@ import MapView, {
   ProviderPropType,
   PROVIDER_GOOGLE
 } from 'react-native-maps'
+
+import Geolocation from '@react-native-community/geolocation';
 
 const { width, height } = Dimensions.get('window')
 
@@ -24,20 +27,90 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 let id = 0
 
 class DrawRoofScreen extends Component {
+
+  state = {
+    region: {
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA
+    },
+    polygons: [],
+    editing: null,
+    creatingHole: false
+  }
+  
   constructor(props) {
     super(props)
-    this.state = {
-      region: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA
-      },
-      polygons: [],
-      editing: null,
-      creatingHole: false
-    }
+    
   }
+
+  callLocation(that){
+    //alert("callLocation Called");
+      Geolocation.getCurrentPosition(
+        //Will give you the current location
+         (position) => {
+            const currentLongitude = JSON.stringify(position.coords.longitude);
+            //getting the Longitude from the location json
+            const currentLatitude = JSON.stringify(position.coords.latitude);
+            //getting the Latitude from the location json
+            that.state.region.longitude = parseFloat(currentLongitude)
+            //that.setState({ currentLongitude:currentLongitude });
+            //Setting state Longitude to re re-render the Longitude Text
+            that.state.region.latitude = parseFloat(currentLatitude)
+            //that.setState({ currentLatitude:currentLatitude });
+            //Setting state Latitude to re re-render the Longitude Text
+         },
+         (error) => alert(error.message),
+         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+      that.watchID = Geolocation.watchPosition((position) => {
+        //Will give you the location on location change
+          console.log(position);
+          const currentLongitude = JSON.stringify(position.coords.longitude);
+          //getting the Longitude from the location json
+          const currentLatitude = JSON.stringify(position.coords.latitude);
+          //getting the Latitude from the location json
+          //that.setState({ currentLongitude:currentLongitude });
+          that.state.region.longitude = parseFloat(currentLongitude)
+         //Setting state Longitude to re re-render the Longitude Text
+          //that.setState({ currentLatitude:currentLatitude });
+          that.state.region.latitude = parseFloat(currentLatitude)
+         //Setting state Latitude to re re-render the Longitude Text
+      });
+   }
+
+  componentDidMount = () => {
+    var that = this
+    if(Platform.OS === 'ios'){
+      this.callLocation(that)
+    }else{
+      async function requestLocationPermission() {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,{
+              'title': 'Location Access Required',
+              'message': 'This App needs to Access your location'
+            }
+          )
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            //To Check, If Permission is granted
+            that.callLocation(that);
+          } else {
+            alert("Permission Denied");
+          }
+        } catch (err) {
+          alert("error ",err);
+          console.warn(err)
+        }
+      }
+      requestLocationPermission();
+    }    
+   }
+
+  componentWillUnmount = () => {
+    Geolocation.clearWatch(this.watchID);
+   }
 
   finish() {
    const { polygons, editing } = this.state;

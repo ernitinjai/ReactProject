@@ -71,7 +71,7 @@ const FirstPage = ({props,navigation}) => {
               textAlign: 'center'
               
             }}>
-            Add new Inquiry
+            Request new Plant
           </Text>
           <TouchableOpacity
             style={styles.button}
@@ -82,8 +82,19 @@ const FirstPage = ({props,navigation}) => {
         
       </View>
 
-      <Container>
+      <Container style={{  padding: 15 }}>
+      <View>
+            <Text style={{
+              fontSize: 18,
+              textAlign: 'center',
+              padding:20
+              
+            }}>
+            e-Procurement Sites
+            </Text>
+          </View>
         <Content>
+         
           {renderpostTypes()}
       </Content>
     </Container>

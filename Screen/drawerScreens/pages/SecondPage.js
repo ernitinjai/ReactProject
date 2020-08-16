@@ -1,42 +1,107 @@
 // React Native Tab - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-tab //
-import * as React from 'react';
+import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import { Container, Header, Content, Card, CardItem, Thumbnail,  Button, Icon, Left, Body, Right } from 'native-base';
 
-const SecondPage = ({ navigation }) => {
+const SecondPage = ({props,navigation}) => {
+  
+  state = {
+  DATA : [
+    { id: 1, title: 'Lorem ipsum dolor sit amet, everti rationibus his cu', views:'200', comments:'9', published:'4h ago' },
+   
+    { id: 2, title: 'Lorem ipsum dolor sit amet, everti rationibus his ', Views:'700', comments:'16', published:'9h ago' },
+   
+    { id: 3, title: 'Lorem ipsum dolor sit amet, everti rationibus hi', Views:'698', comments:'8', published:'14h ago' },
+   
+    ]
+  };
+
+  let renderpostTypes = () => {
+
+    let post = [];
+    
+    state.DATA.map((item, index) => {
+      post.push(
+        <Card key={item} >
+          <CardItem>
+            <Left>
+              
+              <Body>
+                <Text>{item.title}</Text>
+                <Text note>GeekyAnts</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          
+          <CardItem>
+            <Left>
+              <Button transparent>
+                <Icon active name="thumbs-up" />
+                <Text>{item.views}</Text>
+              </Button>
+            </Left>
+            <Body>
+              <Button transparent>
+                <Icon active name="chatbubbles" />
+                <Text>{item.comments}</Text>
+              </Button>
+            </Body>
+            <Right>
+              <Text>{item.published}</Text>
+            </Right>
+          </CardItem>
+        </Card>
+      );
+    });
+   return post;
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1 , padding: 16}}>
+      <View style={{  padding: 16,alignItems:"center" }}>
         <View
           style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems:"center",
+            flexDirection: 'row'
           }}>
           <Text
             style={{
-              fontSize: 25,
-              textAlign: 'center',
-              marginBottom: 16
+              fontSize: 18,
+              textAlign: 'center'
+              
             }}>
-            Setting{'\n'}(You are on SecondPage)
+            Request O&M
           </Text>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('FirstPage')}>
-            <Text>Go to Home Tab</Text>
+            onPress={() => navigation.navigate('Draw roof')}>
+            <Text>Request O&M</Text>
           </TouchableOpacity>
         </View>
-        <Text style={{ fontSize: 18, textAlign: 'center', color: 'grey' }}>
-        React Native Tab Navigation
-        </Text>
-        <Text
-          style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
-          www.aboutreact.com
-        </Text>
+        
       </View>
+
+      <Container style={{  padding: 15 }}>
+      <View>
+            <Text style={{
+              fontSize: 18,
+              textAlign: 'center',
+              padding:20
+              
+            }}>
+            O&M Sites
+            </Text>
+          </View>
+        <Content>
+         
+          {renderpostTypes()}
+      </Content>
+    </Container>
     </SafeAreaView>
-  );
+
+   
+  )
 }
 
 const styles = StyleSheet.create({
@@ -44,8 +109,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
     padding: 10,
-    width: 300,
-    marginTop: 16,
+    marginLeft:20,
+    
   },
 });
 export default SecondPage;

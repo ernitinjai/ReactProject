@@ -26,6 +26,7 @@ import {
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
+import auth from '@react-native-firebase/auth';
 
 const LoginScreen = props => {
   let [userEmail, setUserEmail] = useState('');
@@ -52,7 +53,16 @@ const LoginScreen = props => {
     await GoogleSignin.hasPlayServices();
     const {accessToken, idToken} = await GoogleSignin.signIn();
     setloggedIn(true);
-    this._getCurrentUserInfo();
+    const credential = auth.GoogleAuthProvider.credential(
+        idToken,
+        accessToken,
+      );
+    await auth().signInWithCredential(credential);
+    alert('ho gaya');
+    setloggedIn(true);
+    alert('ho gaya 1');
+    _getCurrentUserInfo();
+    alert('ho gaya 2');
     props.navigation.navigate('DrawerNavigationRoutes');
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -66,7 +76,8 @@ const LoginScreen = props => {
       // play services not available or outdated
     } else {
       // some other error happened
-      alert('some other error happened');
+      console.log(error);
+      alert('some other error happened '+error.code);
     }
   }
 };
@@ -75,7 +86,7 @@ _getCurrentUserInfo = async () => {
   try {
     const userInfo = await GoogleSignin.signInSilently();
     console.log('User Info --> ', userInfo);
-    this.setState({ userInfo: userInfo });
+    setState({ userInfo: userInfo });
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_REQUIRED) {
       alert('User has not signed in yet');
@@ -91,7 +102,7 @@ _getCurrentUserInfo = async () => {
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
-        '418977770929-g9ou7r9eva1u78a3anassxxxxxxx.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        '784687718989-vrb197k7ha70cckjgrg3c0h6o4dhgof8.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
   }, []);
@@ -142,7 +153,7 @@ _getCurrentUserInfo = async () => {
         if (responseJson.msg=="Successful") {
           AsyncStorage.setItem('user_id', userEmail);
           console.log(userEmail);
-          props.navigation.navigate('OtpVerification');
+          props.navigation.navigate('DrawerNavigationRoutes');
         } else {
           setErrortext('Please check your email id or password');
           console.log('Please check your email id or password');
@@ -163,7 +174,7 @@ _getCurrentUserInfo = async () => {
           <KeyboardAvoidingView enabled>
           <View style={styles.container}>
         <SliderBox
-          images={this.state.images}
+          images={state.images}
           autoplay
           sliderBoxHeight={400}
           onCurrentImagePressed={index =>
@@ -215,29 +226,33 @@ _getCurrentUserInfo = async () => {
               onPress={handleSubmitPress}>
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
+            <View style={styles.SectionStyle}>
             <Text
-              style={styles.registerTextStyle}
+              style={styles.optionTextStyle}
+              onPress={() => props.navigation.navigate('ForgotPassword')}>
+              Forgot Password
+            </Text>
+            <Text
+              style={styles.optionTextStyle}
               onPress={() => props.navigation.navigate('RegisterScreen')}>
               New Here ? Register
             </Text>
+            </View>
             <Text
             style={styles.orTextStyle}
               >
-              --------OR---------
+              --------OR---------    
             </Text>
-            <View style={styles.body}>
-            <View style={styles.sectionContainer}>
+            
+            <View style={styles.googlebuttonStyle}>
               {
                 <GoogleSigninButton
-                  style={styles.googlebuttonStyle}
-                  size={GoogleSigninButton.Size.Wide}
+            
                   color={GoogleSigninButton.Color.Dark}
                   onPress={_signIn}
                 />
               }
             </View>
-            
-          </View>
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
@@ -279,11 +294,11 @@ const styles = StyleSheet.create({
   googlebuttonStyle: {
     borderWidth: 0,
     color: '#FFFFFF',
-    height: 40,
+    height: 48,
     alignItems: 'center',
-    borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
+    borderRadius: 30,
     marginTop: 20,
     marginBottom: 20,
   },
@@ -307,13 +322,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
+  optionTextStyle: {
+    flex: 1,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 14,
+  },
 
   orTextStyle: {
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
-    paddingTop:20,
-    paddingBottom:20,
+    paddingTop:5,
+    paddingBottom:5,
     fontSize: 14,
   },
 

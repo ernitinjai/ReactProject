@@ -12,6 +12,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
+import ForgotPassword from './Screen/ForgotPassword';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import OtpVerification from './Screen/Components/OtpVerification';
 import DrawRoofScreen from './Screen/DrawRoofScreen';
@@ -24,12 +25,17 @@ const Auth = createStackNavigator({
       headerShown: false,
     },
   },
-  OtpVerification: {
-    screen: OtpVerification,
+  ForgotPassword: {
+    screen: ForgotPassword,
     navigationOptions: {
-      headerShown: false,
+      title: 'Reset Password',
+      headerStyle: {
+        backgroundColor: '#307ecc',
+      },
+      headerTintColor: '#fff',
     },
   },
+  
   RegisterScreen: {
     screen: RegisterScreen,
     navigationOptions: {
@@ -40,6 +46,13 @@ const Auth = createStackNavigator({
       headerTintColor: '#fff',
     },
   },
+  OtpVerification: {
+    screen: OtpVerification,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  
 });
 
 /* Switch Navigator for those screens which needs to be switched only once

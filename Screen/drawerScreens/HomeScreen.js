@@ -42,7 +42,7 @@ function TabStack() {
         name="FirstPage"
         component={FirstPage}
         options={{
-          tabBarLabel: 'Inquiry',
+          tabBarLabel: 'e-Procurement Sites',
           // tabBarIcon: ({ color, size }) => (
           //   <MaterialCommunityIcons name="home" color={color} size={size} />
           // ),
@@ -51,7 +51,7 @@ function TabStack() {
         name="SecondPage"
         component={SecondPage}
         options={{
-          tabBarLabel: 'O&M',
+          tabBarLabel: 'O&M Sites',
           // tabBarIcon: ({ color, size }) => (
           //   <MaterialCommunityIcons name="settings" color={color} size={size} />
           // ),

@@ -10,12 +10,15 @@ import {
   CustomText,
   CustomTextInput,
   CustomButton,
+  TouchableOpacity,
+  Text,
   FullButtonComponent,
 } from '../lib';
 import ErrorBoundary from '../common/ErrorBoundary';
 import colors from '../common/colors';
 import {isAndroid, logErrorWithMessage} from '../utilities/helperFunctions';
 import TimerText from './TimerText';
+import Loader from '.././Components/loader';
 
 const RESEND_OTP_TIME_LIMIT = 30; // 30 secs
 const AUTO_SUBMIT_OTP_TIME_LIMIT = 4; // 4 secs
@@ -30,7 +33,12 @@ const OtpVerification = function(props) {
   const [otpArray, setOtpArray] = useState(['', '', '', '']);
   const [submittingOtp, setSubmittingOtp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-
+  let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+  let [loading, setLoading] = useState(false);
+  let [userName, setUserName] = useState('');
+  let [userEmail, setUserEmail] = useState('');
+  let [userAge, setUserAge] = useState('');
+  let [userAddress, setUserAddress] = useState('');
   // in secs, if value is greater than 0 then button will be disabled
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
@@ -48,13 +56,13 @@ const OtpVerification = function(props) {
   const fourthTextInputRef = useRef(null);
 
   // a reference to autoSubmitOtpTimerIntervalCallback to always get updated value of autoSubmitOtpTime
-  const autoSubmitOtpTimerIntervalCallbackReference = useRef();
+  //const autoSubmitOtpTimerIntervalCallbackReference = useRef();
 
-  useEffect(() => {
+  /*useEffect(() => {
     // autoSubmitOtpTime value will be set after otp is detected,
     // in that case we have to start auto submit timer
     autoSubmitOtpTimerIntervalCallbackReference.current = autoSubmitOtpTimerIntervalCallback;
-  });
+  });*/
 
   useEffect(() => {
     startResendOtpTimer();
@@ -66,7 +74,7 @@ const OtpVerification = function(props) {
     };
   }, [resendButtonDisabledTime]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     // docs: https://github.com/faizalshap/react-native-otp-verify
 
     RNOtpVerify.getOtp()
@@ -105,7 +113,7 @@ const OtpVerification = function(props) {
     return () => {
       RNOtpVerify.removeListener();
     };
-  }, []);
+  }, []);*/
 
   const startResendOtpTimer = () => {
     if (resendOtpTimerInterval) {
@@ -123,7 +131,7 @@ const OtpVerification = function(props) {
   // this callback is being invoked from startAutoSubmitOtpTimer which itself is being invoked from useEffect
   // since useEffect use closure to cache variables data, we will not be able to get updated autoSubmitOtpTime value
   // as a solution we are using useRef by keeping its value always updated inside useEffect(componentDidUpdate)
-  const autoSubmitOtpTimerIntervalCallback = () => {
+  /*const autoSubmitOtpTimerIntervalCallback = () => {
     if (autoSubmitOtpTime <= 0) {
       clearInterval(autoSubmitOtpTimerInterval);
 
@@ -131,16 +139,16 @@ const OtpVerification = function(props) {
       onSubmitButtonPress();
     }
     setAutoSubmitOtpTime(autoSubmitOtpTime - 1);
-  };
+  };*/
 
-  const startAutoSubmitOtpTimer = () => {
+  /*const startAutoSubmitOtpTimer = () => {
     if (autoSubmitOtpTimerInterval) {
       clearInterval(autoSubmitOtpTimerInterval);
     }
     autoSubmitOtpTimerInterval = setInterval(() => {
       autoSubmitOtpTimerIntervalCallbackReference.current();
     }, 1000);
-  };
+  };*/
 
   const refCallback = textInputRef => node => {
     textInputRef.current = node;
@@ -164,10 +172,9 @@ const OtpVerification = function(props) {
   const onSubmitButtonPress = () => {
     // API call
     // todo
-    //console.log('todo: Submit OTP');
-    props.navigation.navigate('RegisterScreen');
+    props.navigation.navigate('DrawerNavigationRoutes')
   };
-
+  
   // this event won't be fired when text changes from '' to '' i.e. backspace is pressed
   // using onOtpKeyPress for this purpose
   const onOtpChange = index => {
@@ -322,7 +329,7 @@ const styles = StyleSheet.create({
   },
   otpText: {
     fontWeight: 'bold',
-    color: colors.BLUE,
+    textDecorationColor: colors.BLUE,
     fontSize: 18,
     width: '100%',
   },

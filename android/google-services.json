@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "784687718989",
+    "firebase_url": "https://esunscope.firebaseio.com",
+    "project_id": "esunscope",
+    "storage_bucket": "esunscope.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:784687718989:android:763d222d7d98b4f951f204",
+        "android_client_info": {
+          "package_name": "com.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "784687718989-627cmsrdfvr47jbv03g0981qgci839qc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.firstapp",
+            "certificate_hash": "9c9df649adc8e37c8f79c9fe3f5d56ffbe228c3f"
+          }
+        },
+        {
+          "client_id": "784687718989-vrb197k7ha70cckjgrg3c0h6o4dhgof8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARq2Zuju8ezi0jRHiVu4E4m0Z3_o1NN6w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "784687718989-vrb197k7ha70cckjgrg3c0h6o4dhgof8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

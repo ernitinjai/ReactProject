@@ -18,16 +18,14 @@ import {
 } from 'react-native';
 import Loader from './Components/loader';
 
-const RegisterScreen = props => {
-  let [userName, setUserName] = useState('');
+const ForgotPassword = props => {
   let [userEmail, setUserEmail] = useState('');
-  let [userAge, setUserAge] = useState('');
-  let [userAddress, setUserAddress] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
   const handleSubmitButton = () => {
+
    
     /*setErrortext('');
     if (!userName) {
@@ -128,100 +126,33 @@ const RegisterScreen = props => {
           />
         </View>
         <KeyboardAvoidingView enabled>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Name"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              returnKeyType="next"
-              onSubmitEditing={() =>
-                this._emailinput && this._emailinput.focus()
-              }
-              blurOnSubmit={false}
-            />
-          </View>
-          <View style={styles.SectionStyle}>
-          <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Last Name"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              returnKeyType="next"
-              onSubmitEditing={() =>
-                this._emailinput && this._emailinput.focus()
-              }
-              blurOnSubmit={false}
-            />
-            </View>
+          
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
               onChangeText={UserEmail => setUserEmail(UserEmail)}
-              underlineColorAndroid="#F6F6F7"
               placeholder="Enter Email or Mobile"
               placeholderTextColor="#F6F6F7"
               keyboardType="email-address"
-              ref={ref => {
-                this._emailinput = ref;
-              }}
+            
               returnKeyType="next"
               onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
               blurOnSubmit={false}
             />
           </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserAge => setUserAge(UserAge)}
-              underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Password"
-              placeholderTextColor="#F6F6F7"
-              keyboardType="numeric"
-              ref={ref => {
-                this._ageinput = ref;
-              }}
-              onSubmitEditing={() =>
-                this._addressinput && this._addressinput.focus()
-              }
-              blurOnSubmit={false}
-            />
-          </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={UserAddress => setUserAddress(UserAddress)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Confirm Password"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              ref={ref => {
-                this._addressinput = ref;
-              }}
-              returnKeyType="next"
-              onSubmitEditing={Keyboard.dismiss}
-              blurOnSubmit={false}
-            />
-          </View>
-          {errortext != '' ? (
-            <Text style={styles.errorTextStyle}> {errortext} </Text>
-          ) : null}
+          
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={() => props.navigation.navigate('OtpVerification')}>
-            <Text style={styles.buttonTextStyle}>REGISTER</Text>
+            onPress={handleSubmitButton}>
+            <Text style={styles.buttonTextStyle}>Reset Password</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>
     </View>
   );
 };
-export default RegisterScreen;
+export default ForgotPassword;
 
 const styles = StyleSheet.create({
   SectionStyle: {
