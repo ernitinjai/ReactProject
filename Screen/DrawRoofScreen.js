@@ -3,6 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput,
+  Keyboard,
   Dimensions,
   TouchableOpacity,
   PermissionsAndroid
@@ -16,11 +18,13 @@ import MapView, {
 } from 'react-native-maps'
 
 import Geolocation from '@react-native-community/geolocation';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { color } from 'react-native-reanimated';
 
 const { width, height } = Dimensions.get('window')
 
 const ASPECT_RATIO = width / height
-const LATITUDE = 37.78825
+const LATITUDE = 66.78825
 const LONGITUDE = -122.4324
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
@@ -231,6 +235,8 @@ class DrawRoofScreen extends Component {
           )}
         </MapView>
 
+      
+
         <View style={styles.buttonContainer}>
           {this.state.editing && (
             <TouchableOpacity
@@ -238,7 +244,7 @@ class DrawRoofScreen extends Component {
               style={[styles.bubble, styles.button]}
             >
               <Text>
-                {this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}
+                {this.state.creatingHole ? 'Finish Draw Roof' : 'Start Draw Roof'}
               </Text>
             </TouchableOpacity>
           )}
@@ -275,6 +281,9 @@ const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject
   },
+  map: {
+    ...StyleSheet.absoluteFillObject
+  },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
     paddingHorizontal: 18,
@@ -295,6 +304,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: 20,
     backgroundColor: 'transparent'
+  },
+  inputStyle: {
+    color: 'white',
+    paddingLeft: 15,
+    paddingRight: 15,
+    height:40,
+    margin:15,
+    borderWidth: 1,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    borderColor: 'white',
   }
 })
 

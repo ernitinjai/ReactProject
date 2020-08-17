@@ -26,7 +26,7 @@ import {
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
-import auth from '@react-native-firebase/auth';
+//import auth from '@react-native-firebase/auth';
 
 const LoginScreen = props => {
   let [userEmail, setUserEmail] = useState('');
@@ -53,7 +53,7 @@ const LoginScreen = props => {
     await GoogleSignin.hasPlayServices();
     const {accessToken, idToken} = await GoogleSignin.signIn();
     setloggedIn(true);
-    const credential = auth.GoogleAuthProvider.credential(
+    /*const credential = auth.GoogleAuthProvider.credential(
         idToken,
         accessToken,
       );
@@ -62,7 +62,7 @@ const LoginScreen = props => {
     setloggedIn(true);
     alert('ho gaya 1');
     _getCurrentUserInfo();
-    alert('ho gaya 2');
+    alert('ho gaya 2');*/
     props.navigation.navigate('DrawerNavigationRoutes');
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {

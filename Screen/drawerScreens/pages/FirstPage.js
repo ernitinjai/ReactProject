@@ -8,12 +8,10 @@ const FirstPage = ({props,navigation}) => {
   
   state = {
   DATA : [
-    { id: 1, title: 'Lorem ipsum dolor sit amet, everti rationibus his cu', views:'200', comments:'9', published:'4h ago' },
-   
-    { id: 2, title: 'Lorem ipsum dolor sit amet, everti rationibus his ', Views:'700', comments:'16', published:'9h ago' },
-   
-    { id: 3, title: 'Lorem ipsum dolor sit amet, everti rationibus hi', Views:'698', comments:'8', published:'14h ago' },
-   
+    {id :1,	inquiry_no:1234,	property_type	:"residential",address:"Hare krishna vihar, Nipania, Indore",	inquiry_date:"22/3/2020",	status:"In process"},
+    {id :2,	inquiry_no:12356,	property_type	:"self",address:"Indore 23",	inquiry_date:"21/4/2020",	status:"Completed"},
+    {id :3,	inquiry_no:12367,	property_type	:"building",address:"Indore 12345",	inquiry_date:"19/3/2020",	status:"In process"},
+     
     ]
   };
 
@@ -26,30 +24,58 @@ const FirstPage = ({props,navigation}) => {
         <Card key={item} >
           <CardItem>
             <Left>
-              
               <Body>
-                <Text>{item.title}</Text>
-                <Text note>GeekyAnts</Text>
-              </Body>
+              <Text>No:</Text>
+                <Text>{item.id}</Text>
+        
+               </Body>
             </Left>
+
+            <Body>
+                <Text>Inquiry No:</Text>
+                <Text>{item.inquiry_no}</Text>
+            </Body>
+            <Right>
+            <Text>Inquiry Date:</Text>
+              <Text>{item.inquiry_date}</Text>
+            </Right>
+
           </CardItem>
+
+          <View style = {styles.lineStyle} />
+
           
           <CardItem>
             <Left>
-              <Button transparent>
-                <Icon active name="thumbs-up" />
-                <Text>{item.views}</Text>
-              </Button>
+              
+                
+                <Text>Property Type:</Text>
             </Left>
             <Body>
-              <Button transparent>
-                <Icon active name="chatbubbles" />
-                <Text>{item.comments}</Text>
-              </Button>
+             
+              <Text>{item.property_type}</Text>
             </Body>
-            <Right>
-              <Text>{item.published}</Text>
-            </Right>
+            
+          </CardItem>
+
+          <CardItem>
+            <Left>
+                <Text>Address</Text>
+            </Left>
+            <Body>
+              <Text>{item.address}</Text>
+            </Body>
+            
+          </CardItem>
+
+          <CardItem>
+            <Left>
+                <Text>Status</Text>
+            </Left>
+            <Body>
+              <Text>{item.status}</Text>
+            </Body>
+            
           </CardItem>
         </Card>
       );
@@ -112,5 +138,10 @@ const styles = StyleSheet.create({
     marginLeft:20,
     
   },
+  lineStyle:{
+    borderWidth: 0.5,
+    borderColor:'#DDDDDD',
+    margin:10,
+},
 });
 export default FirstPage;
