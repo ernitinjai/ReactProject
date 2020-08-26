@@ -3,6 +3,9 @@
 
 //Import React and Hook we needed
 import React, { useState } from 'react';
+import colors from './common/colors';
+import OtpVerification from './OtpVerification';
+import AsyncStorage from '@react-native-community/async-storage';
 
 //Import all required component
 import {
@@ -19,38 +22,25 @@ import {
 import Loader from './Components/loader';
 
 const ForgotPassword = props => {
-  let [userEmail, setUserEmail] = useState('');
+  let [userName, setUserName] = useState('');
+  let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
-  let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
+  
 
   const handleSubmitButton = () => {
 
    
-    /*setErrortext('');
+    setErrortext('');
     if (!userName) {
-      alert('Please fill Name');
+      alert('Please enter username,Email or Mobile number');
       return;
     }
-    if (!userEmail) {
-      alert('Please fill Email');
-      return;
-    }
-    if (!userAge) {
-      alert('Please fill Age');
-      return;
-    }
-    if (!userAddress) {
-      alert('Please fill Address');
-      return;
-    }*/
+    
     //Show Loader
     setLoading(true);
     var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
+      login: userName
     };
     var formBody = [];
     for (var key in dataToSend) {
@@ -60,7 +50,7 @@ const ForgotPassword = props => {
     }
     formBody = formBody.join('&');
 
-    fetch('https://aboutreact.herokuapp.com/register.php', {
+    fetch('https://esunscope.org/cms/api/user/forgotpassword', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -72,14 +62,21 @@ const ForgotPassword = props => {
       .then(responseJson => {
         //Hide Loader
         setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          setIsRegistraionSuccess(true);
-          console.log('Registration Successful. Please Login to proceed');
-        } else {
-          setIsRegistraionSuccess(true);
-          setErrortext('Registration Unsuccessful');
+        const first = responseJson[0];
+        console.log(first);
+        if(first.data ==null )
+        {
+          setIsRegistraionSuccess(false);
+          setErrortext(first.message);
+        }else{
+          console.log(first.data.user_id);
+          AsyncStorage.setItem('user_id', first.data.user_id);
+          AsyncStorage.setItem('otp', ""+first.data.otp);
+          AsyncStorage.setItem('username', first.data.username);
+          AsyncStorage.setItem('mobile', first.data.mobile);
+          AsyncStorage.setItem('email', first.data.email);
+          props.navigation.navigate('OtpVerification')
+          
         }
       })
       .catch(error => {
@@ -88,30 +85,9 @@ const ForgotPassword = props => {
         console.error(error);
       });
   };
-  if (isRegistraionSuccess) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: '#307ecc',
-          justifyContent: 'center',
-        }}>
-        <Image
-          source={require('../Images/logo.png')}
-          style={{ height: 150, resizeMode: 'contain', alignSelf: 'center' }}
-        />
-        <Text style={styles.successTextStyle}>Registration Successful.</Text>
-        <TouchableOpacity
-          style={styles.buttonStyle}
-          activeOpacity={0.5}
-          onPress={() => props.navigation.navigate('DrawerNavigationRoutes')}>
-          <Text style={styles.buttonTextStyle}>Go to Home screen Now</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
+  
   return (
-    <View style={{ flex: 1, backgroundColor: '#307ecc' }}>
+    <View style={{ flex: 1, backgroundColor: colors.WHITE }}>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center' }}>
@@ -130,17 +106,18 @@ const ForgotPassword = props => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserEmail => setUserEmail(UserEmail)}
+              onChangeText={userName => setUserName(userName)}
               placeholder="Enter Email or Mobile"
-              placeholderTextColor="#F6F6F7"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
               keyboardType="email-address"
-            
               returnKeyType="next"
               onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
               blurOnSubmit={false}
             />
           </View>
-          
+          {errortext != '' ? (
+            <Text style={styles.errorTextStyle}> {errortext} </Text>
+          ) : null}
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
@@ -164,31 +141,32 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: colors.APP_YELLOW,
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: colors.WHITE,
     paddingVertical: 10,
     fontSize: 16,
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: colors.LIGHT_GREY_FONT,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
-    borderColor: 'white',
+    fontSize:18,
+    backgroundColor: colors.WHITE,
+    borderColor: colors.BOARDER,
   },
   errorTextStyle: {
     color: 'red',

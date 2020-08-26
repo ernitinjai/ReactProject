@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 //Import all required component
 import { ActivityIndicator, View, StyleSheet, Image } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import colors from './common/colors';
 
 const SplashScreen = props => {
   //State for ActivityIndicator animation
@@ -23,7 +24,7 @@ const SplashScreen = props => {
           value === null ? 'Auth' : 'DrawerNavigationRoutes'
         )
       );
-    }, 5000);
+    }, 3000);
   }, []);
 
   return (
@@ -34,7 +35,7 @@ const SplashScreen = props => {
       />
       <ActivityIndicator
         animating={animating}
-        color="#FFFFFF"
+        color = {colors.APP_YELLOW}
         size="large"
         style={styles.activityIndicator}
       />
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: colors.BACKGROUND,
   },
   activityIndicator: {
     alignItems: 'center',

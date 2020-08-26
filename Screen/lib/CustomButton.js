@@ -7,7 +7,7 @@ import colors from '../common/colors';
 const CustomButton = function(props) {
   const style = {};
   if (props.type === 'fill') {
-    style.backgroundColor = colors.BLUE;
+    style.backgroundColor = colors.APP_YELLOW;
     style.borderWidth = 0;
   } else if (props.type === 'default') {
     style.borderColor = colors.BLUE;

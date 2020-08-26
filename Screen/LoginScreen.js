@@ -27,6 +27,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
 //import auth from '@react-native-firebase/auth';
+import colors from './common/colors';
 
 const LoginScreen = props => {
   let [userEmail, setUserEmail] = useState('');
@@ -53,16 +54,14 @@ const LoginScreen = props => {
     await GoogleSignin.hasPlayServices();
     const {accessToken, idToken} = await GoogleSignin.signIn();
     setloggedIn(true);
-    /*const credential = auth.GoogleAuthProvider.credential(
+    const credential = auth.GoogleAuthProvider.credential(
         idToken,
         accessToken,
       );
     await auth().signInWithCredential(credential);
-    alert('ho gaya');
     setloggedIn(true);
-    alert('ho gaya 1');
+    
     _getCurrentUserInfo();
-    alert('ho gaya 2');*/
     props.navigation.navigate('DrawerNavigationRoutes');
   } catch (error) {
     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
@@ -104,6 +103,7 @@ _getCurrentUserInfo = async () => {
       webClientId:
         '784687718989-vrb197k7ha70cckjgrg3c0h6o4dhgof8.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      iosClientId:'784687718989-l2vkljud95au545isl425uqhcj4tc3cp.apps.googleusercontent.com'
     });
   }, []);
   const signOut = async () => {
@@ -176,6 +176,7 @@ _getCurrentUserInfo = async () => {
         <SliderBox
           images={state.images}
           autoplay
+          marginTop={20}
           sliderBoxHeight={400}
           onCurrentImagePressed={index =>
             console.warn(`image ${index} pressed`)
@@ -188,8 +189,7 @@ _getCurrentUserInfo = async () => {
                 onChangeText={UserEmail => setUserEmail(UserEmail)}
                 //underlineColorAndroid="#FFFFFF"
                 placeholder="Enter Username" //dummy@abc.com
-                placeholderTextColor="#F6F6F7"
-                autoCapitalize="none"
+                placeholderTextColor={colors.LIGHT_GREY_FONT}
                 keyboardType="email-address"
                 ref={ref => {
                   _emailinput = ref;
@@ -207,8 +207,9 @@ _getCurrentUserInfo = async () => {
                 onChangeText={UserPassword => setUserPassword(UserPassword)}
                 //underlineColorAndroid="#FFFFFF"
                 placeholder="Enter Password" //12345
-                placeholderTextColor="#F6F6F7"
+                placeholderTextColor={colors.LIGHT_GREY_FONT}
                 keyboardType="default"
+                autoCompleteType='password'
                 ref={ref => {
                   _passwordinput = ref;
                 }}
@@ -226,7 +227,7 @@ _getCurrentUserInfo = async () => {
               onPress={handleSubmitPress}>
               <Text style={styles.buttonTextStyle}>LOGIN</Text>
             </TouchableOpacity>
-            <View style={styles.SectionStyle}>
+            <View style={styles.SpacerStyle}>
             <Text
               style={styles.optionTextStyle}
               onPress={() => props.navigation.navigate('ForgotPassword')}>
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
   mainBody: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#307ecc',
+    backgroundColor: colors.BACKGROUND
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -278,14 +279,22 @@ const styles = StyleSheet.create({
     marginRight: 35,
     margin: 10,
   },
+  SpacerStyle: {
+    flexDirection: 'row',
+    height: 40,
+    marginTop: 5,
+    marginLeft: 35,
+    marginRight: 35,
+    margin: 10,
+  },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: colors.APP_YELLOW,
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
@@ -303,35 +312,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: colors.WHITE,
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight:'bold'
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: colors.LIGHT_GREY_FONT,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
-    borderColor: 'white',
+    fontSize:18,
+    backgroundColor: colors.WHITE,
+    borderColor: colors.BOARDER,
   },
   registerTextStyle: {
-    color: '#FFFFFF',
+    color: colors.BLACK,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 14,
   },
   optionTextStyle: {
     flex: 1,
-    color: '#FFFFFF',
+    color: colors.BLACK,
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 14,
   },
 
   orTextStyle: {
-    color: '#FFFFFF',
+    color: colors.LIGHT_GREY_FONT,
     textAlign: 'center',
     fontWeight: 'bold',
     paddingTop:5,

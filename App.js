@@ -14,7 +14,7 @@ import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import ForgotPassword from './Screen/ForgotPassword';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
-import OtpVerification from './Screen/Components/OtpVerification';
+import OtpVerification from './Screen/OtpVerification';
 import DrawRoofScreen from './Screen/DrawRoofScreen';
 
 const Auth = createStackNavigator({
@@ -30,7 +30,17 @@ const Auth = createStackNavigator({
     navigationOptions: {
       title: 'Reset Password',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#F5BA1B',
+      },
+      headerTintColor: '#fff',
+    },
+  },
+  OtpVerification: {
+    screen: OtpVerification,
+    navigationOptions: {
+      headerShown: true,
+      headerStyle: {
+        backgroundColor: '#F5BA1B',
       },
       headerTintColor: '#fff',
     },
@@ -41,17 +51,12 @@ const Auth = createStackNavigator({
     navigationOptions: {
       title: 'Register',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#F5BA1B',
       },
       headerTintColor: '#fff',
     },
   },
-  OtpVerification: {
-    screen: OtpVerification,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
+  
   
 });
 
@@ -75,7 +80,8 @@ const App = createSwitchNavigator({
     screen: DrawerNavigationRoutes,
     navigationOptions: {
       /* Hiding header for Navigation Drawer as we will use our custom header */
-      headerShown: false,
+      headerShown: true,
+      
     },
   },
   DrawRoofScreen: {
@@ -83,7 +89,7 @@ const App = createSwitchNavigator({
     navigationOptions: {
       title: 'Draw Roof',
       headerStyle: {
-        backgroundColor: '#307ecc',
+        backgroundColor: '#F5BA1B',
       },
       headerTintColor: '#fff',
     },

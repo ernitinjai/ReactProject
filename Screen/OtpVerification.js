@@ -2,8 +2,9 @@ import React, {useState, useRef, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
 import RNOtpVerify from 'react-native-otp-verify';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import {GenericStyles} from '../styles/GenericStyles';
+import {GenericStyles} from './styles/GenericStyles';
 import {
   NavigationHeader,
   CustomScreenContainer,
@@ -11,14 +12,18 @@ import {
   CustomTextInput,
   CustomButton,
   TouchableOpacity,
-  Text,
   FullButtonComponent,
-} from '../lib';
-import ErrorBoundary from '../common/ErrorBoundary';
-import colors from '../common/colors';
-import {isAndroid, logErrorWithMessage} from '../utilities/helperFunctions';
-import TimerText from './TimerText';
-import Loader from '.././Components/loader';
+} from './lib';
+import {
+  Alert,
+} from 'react-native'
+
+import ErrorBoundary from './common/ErrorBoundary';
+import colors from './common/colors';
+import {isAndroid, logErrorWithMessage} from './utilities/helperFunctions';
+import TimerText from './Components/TimerText';
+import Loader from './Components/loader';
+import { useScrollToTop } from '@react-navigation/native';
 
 const RESEND_OTP_TIME_LIMIT = 30; // 30 secs
 const AUTO_SUBMIT_OTP_TIME_LIMIT = 4; // 4 secs
@@ -30,15 +35,16 @@ const OtpVerification = function(props) {
   const {otpRequestData, attempts} = props;
 
   const [attemptsRemaining, setAttemptsRemaining] = useState(attempts);
-  const [otpArray, setOtpArray] = useState(['', '', '', '']);
+  const [otpArray, setOtpArray] = useState(['', '', '', '','','']);
   const [submittingOtp, setSubmittingOtp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
   let [loading, setLoading] = useState(false);
-  let [userName, setUserName] = useState('');
-  let [userEmail, setUserEmail] = useState('');
-  let [userAge, setUserAge] = useState('');
-  let [userAddress, setUserAddress] = useState('');
+  let [userId, setUserId] = useState('');
+  let [userOTP, setOTP] = useState('');
+  let [userNewPassword, setNewPassword] = useState('');
+  let [userConfirmPassword, setConfirmPassword] = useState('');
+  let [errortext, setErrortext] = useState('');
   // in secs, if value is greater than 0 then button will be disabled
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
@@ -54,6 +60,8 @@ const OtpVerification = function(props) {
   const secondTextInputRef = useRef(null);
   const thirdTextInputRef = useRef(null);
   const fourthTextInputRef = useRef(null);
+  const fifthTextInputRef = useRef(null);
+  const sixthTextInputRef = useRef(null);
 
   // a reference to autoSubmitOtpTimerIntervalCallback to always get updated value of autoSubmitOtpTime
   //const autoSubmitOtpTimerIntervalCallbackReference = useRef();
@@ -114,6 +122,13 @@ const OtpVerification = function(props) {
       RNOtpVerify.removeListener();
     };
   }, []);*/
+  useEffect(() => {
+
+      AsyncStorage.getItem('user_id').then(value =>
+        setUserId(value)
+      );
+   
+  }, []);
 
   const startResendOtpTimer = () => {
     if (resendOtpTimerInterval) {
@@ -157,7 +172,7 @@ const OtpVerification = function(props) {
   const onResendOtpButtonPress = () => {
     // clear last OTP
     if (firstTextInputRef) {
-      setOtpArray(['', '', '', '']);
+      setOtpArray(['', '', '', '','','']);
       firstTextInputRef.current.focus();
     }
 
@@ -170,10 +185,88 @@ const OtpVerification = function(props) {
   };
 
   const onSubmitButtonPress = () => {
-    // API call
-    // todo
-    props.navigation.navigate('DrawerNavigationRoutes')
+    handleSubmitButton();
+    //props.navigation.navigate('DrawerNavigationRoutes')
   };
+
+  const handleSubmitButton = () => {
+
+    setErrortext('');
+    
+    if (userConfirmPassword!=userNewPassword) {
+      alert('Password doesnt match');
+      return;
+    }
+    
+    let str = '';
+    otpArray.forEach(function(i, index) {
+    str += i;
+    });
+    console.log(str);
+    setNewPassword(str);
+    //Show Loader
+    setLoading(true);
+    var dataToSend = {
+      user_id: userId,
+      otp:userOTP,
+      new_password: userNewPassword,
+    };
+    var formBody = [];
+    for (var key in dataToSend) {
+      var encodedKey = encodeURIComponent(key);
+      var encodedValue = encodeURIComponent(dataToSend[key]);
+      formBody.push(encodedKey + '=' + encodedValue);
+    }
+    formBody = formBody.join('&');
+
+    fetch('https://esunscope.org/cms/api/user/resetpassword', {
+      method: 'POST',
+      body: formBody,
+      headers: {
+        //Header Defination
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        //Hide Loader
+        setLoading(false);
+        const first = responseJson[0];
+        console.log(first);
+        if(first.data ==null )
+        {
+          setIsRegistraionSuccess(false);
+          alert(first.message);
+          //setErrortext(first.message);
+        }else{
+          setIsRegistraionSuccess(true);
+          //console.log(first.data.user_id);
+        }
+      })
+      .catch(error => {
+        //Hide Loader
+        setLoading(false);
+        console.error(error);
+      });
+  };
+
+  if (isRegistraionSuccess) {
+    Alert.alert(
+      'Congratulations!',
+      'Your password has been reset successfully.Please Login with new password.',
+      [
+        {
+          text: 'Ok',
+          onPress: () => {
+            AsyncStorage.clear();
+            props.navigation.navigate('LoginScreen')
+            console.log('logout');
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
   
   // this event won't be fired when text changes from '' to '' i.e. backspace is pressed
   // using onOtpKeyPress for this purpose
@@ -195,7 +288,12 @@ const OtpVerification = function(props) {
           thirdTextInputRef.current.focus();
         } else if (index === 2) {
           fourthTextInputRef.current.focus();
+        }else if (index === 3) {
+          fifthTextInputRef.current.focus();
+        }else if (index === 4) {
+          sixthTextInputRef.current.focus();
         }
+
       }
     };
   };
@@ -213,6 +311,10 @@ const OtpVerification = function(props) {
           secondTextInputRef.current.focus();
         } else if (index === 3) {
           thirdTextInputRef.current.focus();
+        }else if (index === 4) {
+          fourthTextInputRef.current.focus();
+        }else if (index === 5) {
+          fifthTextInputRef.current.focus();
         }
 
         /**
@@ -231,14 +333,39 @@ const OtpVerification = function(props) {
 
   return (
     <CustomScreenContainer>
-      <NavigationHeader
-        title={'Go back'}
-        leftIconAction={() => {}}
-        leftIconType={'back'}
-        containerStyle={GenericStyles.navigationHeaderBorder}
-      />
+      
       <ErrorBoundary screenName={'OtpVerification'}>
         <View style={styles.container}>
+
+
+        <View style={[GenericStyles.centerAlignedText, GenericStyles.mt12,styles.spacer]}>
+            <CustomTextInput
+              
+              onChangeText={userNewPassword => setNewPassword(userNewPassword)}
+              placeholder="New Password"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='password'
+              returnKeyType="next"
+              style={[styles.passwordText]}
+              
+            />
+          </View>
+
+          <View style={[GenericStyles.centerAlignedText, GenericStyles.mt12,styles.spacer]}>
+            <CustomTextInput
+              
+              onChangeText={userConfirmPassword => setConfirmPassword(userConfirmPassword)}
+              placeholder="Confirm Password"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              keyboardType="email-address"
+              returnKeyType="next"
+              style={[styles.passwordText]}
+              
+            />
+          </View>
+
+
+
           <CustomText>
             Enter OTP sent to your{' '}
             {otpRequestData.email_id ? 'email' : 'mobile number'}{' '}
@@ -249,6 +376,8 @@ const OtpVerification = function(props) {
               secondTextInputRef,
               thirdTextInputRef,
               fourthTextInputRef,
+              fifthTextInputRef,
+              sixthTextInputRef,
             ].map((textInputRef, index) => (
               <CustomTextInput
                 containerStyle={[GenericStyles.fill, GenericStyles.mr12]}
@@ -285,6 +414,7 @@ const OtpVerification = function(props) {
               onPress={onResendOtpButtonPress}
             />
           )}
+          
           <View style={GenericStyles.fill} />
           {submittingOtp && <ActivityIndicator />}
           {autoSubmitOtpTime > 0 &&
@@ -295,7 +425,8 @@ const OtpVerification = function(props) {
             style={[GenericStyles.centerAlignedText, GenericStyles.mt12]}>
             {attemptsRemaining || 0} Attempts remaining
           </CustomText>
-          <FullButtonComponent
+          <FullButtonComponent 
+            
             type={'fill'}
             text={'Submit'}
             textStyle={styles.submitButtonText}
@@ -332,6 +463,16 @@ const styles = StyleSheet.create({
     textDecorationColor: colors.BLUE,
     fontSize: 18,
     width: '100%',
+  },
+  passwordText: {
+    
+    textDecorationColor: colors.BLUE,
+    fontSize: 18,
+    width: '100%',
+  },
+  spacer:{
+    marginTop:20,
+    marginBottom:20,
   },
 });
 

@@ -20,17 +20,24 @@ import MapView, {
 import Geolocation from '@react-native-community/geolocation';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { color } from 'react-native-reanimated';
+import MapInput from './Components/MapInput';
+import { Left } from 'native-base';
+import ForgotPassword from './ForgotPassword';
 
 const { width, height } = Dimensions.get('window')
 
 const ASPECT_RATIO = width / height
-const LATITUDE = 66.78825
-const LONGITUDE = -122.4324
+const LATITUDE = 22.7196
+const LONGITUDE = 75.8577
 const LATITUDE_DELTA = 0.0922
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 let id = 0
 
+
+
 class DrawRoofScreen extends Component {
+
+  
 
   state = {
     region: {
@@ -50,7 +57,7 @@ class DrawRoofScreen extends Component {
   }
 
   callLocation(that){
-    //alert("callLocation Called");
+    
       Geolocation.getCurrentPosition(
         //Will give you the current location
          (position) => {
@@ -64,13 +71,15 @@ class DrawRoofScreen extends Component {
             that.state.region.latitude = parseFloat(currentLatitude)
             //that.setState({ currentLatitude:currentLatitude });
             //Setting state Latitude to re re-render the Longitude Text
-         },
+            
+          },
          (error) => alert(error.message),
          { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
       );
       that.watchID = Geolocation.watchPosition((position) => {
         //Will give you the location on location change
-          console.log(position);
+          console.log('so'+position);
+          //alert(position.coords.longitude);
           const currentLongitude = JSON.stringify(position.coords.longitude);
           //getting the Longitude from the location json
           const currentLatitude = JSON.stringify(position.coords.latitude);
@@ -81,6 +90,14 @@ class DrawRoofScreen extends Component {
           //that.setState({ currentLatitude:currentLatitude });
           that.state.region.latitude = parseFloat(currentLatitude)
          //Setting state Latitude to re re-render the Longitude Text
+         this.setState({
+          region: {
+              latitude: parseFloat(currentLatitude),
+              longitude: parseFloat(currentLongitude),
+              latitudeDelta: 0.003,
+              longitudeDelta: 0.003
+          }
+      });
       });
    }
 
@@ -193,6 +210,17 @@ class DrawRoofScreen extends Component {
     }
   }
 
+  getCoordsFromName(loc) {
+    this.setState({
+        region: {
+            latitude: loc.lat,
+            longitude: loc.lng,
+            latitudeDelta: 0.003,
+            longitudeDelta: 0.003
+        }
+    });
+  }
+
   render() {
     const mapOptions = {
       scrollEnabled: true
@@ -203,13 +231,18 @@ class DrawRoofScreen extends Component {
       mapOptions.onPanDrag = e => this.onPress(e)
     }
 
+    
+
     return (
       <View style={styles.container}>
+      {
+      this.state.region['latitude'] ?
         <MapView
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           mapType={MAP_TYPES.SATELLITE}
           initialRegion={this.state.region}
+          //region={this.state.region}
           onPress={e => this.onPress(e)}
           {...mapOptions}
         >
@@ -234,7 +267,20 @@ class DrawRoofScreen extends Component {
             />
           )}
         </MapView>
+        : null}
+        <View style={styles.map}>
+            <MapInput notifyChange={(loc) => this.getCoordsFromName(loc)
+          
+            }/>
+        </View>
 
+        
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("NewInquiry")}
+          style={[ styles.nextbubble,styles.button]}
+        >
+          <Text>Next</Text>
+        </TouchableOpacity>
       
 
         <View style={styles.buttonContainer}>
@@ -274,15 +320,24 @@ DrawRoofScreen.propTypes = {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
   map: {
     ...StyleSheet.absoluteFillObject
   },
-  map: {
-    ...StyleSheet.absoluteFillObject
+  nextbubble: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,1)',
+    top: 60,
+    left: 280,
+    width: 80,
+    height:50,
+    borderRadius: 20,
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    alignItems: 'center'
   },
   bubble: {
     backgroundColor: 'rgba(255,255,255,0.7)',
@@ -290,6 +345,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 20
   },
+  
   latlng: {
     width: 200,
     alignItems: 'stretch'
@@ -317,4 +373,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default DrawRoofScreen
+export default DrawRoofScreen;

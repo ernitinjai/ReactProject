@@ -14,7 +14,6 @@ target 'firstApp' do
 
   use_react_native!(:path => config["reactNativePath"])
 
-  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
   target 'firstAppTests' do
     inherit! :complete

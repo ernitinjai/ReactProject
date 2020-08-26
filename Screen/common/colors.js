@@ -18,6 +18,10 @@ const colors = {
   PALE_YELLOW: '#fff6ef',
   DARK_BLUE: '#2e68b2',
   LIGHT_BLUE: '#EEEFF9',
+  APP_YELLOW:'#F5BA1B',
+  BACKGROUND:'#ffffff',
+  BOARDER:'#CCCCCC',
+  LIGHT_GREY_FONT:'#757575'
 };
 
 export default colors;

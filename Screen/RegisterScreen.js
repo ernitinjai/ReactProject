@@ -15,45 +15,88 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
+import CountryPicker from 'rn-country-picker';
 import Loader from './Components/loader';
+import colors from './common/colors';
 
 const RegisterScreen = props => {
+  
   let [userName, setUserName] = useState('');
+  let [userFirstName, setUserFirstName] = useState('');
+  let [userLastName, setUserLastName] = useState('');
   let [userEmail, setUserEmail] = useState('');
-  let [userAge, setUserAge] = useState('');
-  let [userAddress, setUserAddress] = useState('');
+  let [userMobileNumber, setUserMobileNumber] = useState('');
+  let [userCountryCode, setUserCountryCode] = useState('+91');
+  let [userPassword, setUserPassword] = useState('');
+  let [userConfirmPassword, setUserConfirmPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
+  _selectedValue = (index) => {
+    setUserCountryCode({mCountryCode: index});
+  };
+
   const handleSubmitButton = () => {
-   
-    /*setErrortext('');
+
+    setErrortext(''); 
+    var dataToSend = {
+      username: userName,
+      firstname: userFirstName,
+      lastname: userLastName,
+      mobile: userMobileNumber,
+      countrycode: userCountryCode,
+      email: userEmail,
+      password: userPassword,
+    };
     if (!userName) {
       alert('Please fill Name');
+      return;
+    }
+    if (!userFirstName) {
+      alert('Please fill Name');
+      return;
+    }
+    if (!userLastName) {
+      alert('Please fill last name');
       return;
     }
     if (!userEmail) {
       alert('Please fill Email');
       return;
     }
-    if (!userAge) {
-      alert('Please fill Age');
+    if (!userMobileNumber) {
+      alert('Please fill Mobile number');
       return;
     }
-    if (!userAddress) {
-      alert('Please fill Address');
+    if (!userCountryCode) { 
+      alert('Please Enter Country code');
       return;
-    }*/
+    } 
+    if (!userPassword) {
+      alert('Please fill Password');
+      return;
+    }
+
+    if (userPassword !== userConfirmPassword) {
+      alert('Password doesnt match');
+      return;
+    }
     //Show Loader
     setLoading(true);
+
     var dataToSend = {
-      user_name: userName,
-      user_email: userEmail,
-      user_age: userAge,
-      user_address: userAddress,
+      username: userName,
+      firstname: userFirstName,
+      lastname: userLastName,
+      mobile: userMobileNumber,
+      countrycode: userCountryCode,
+      email: userEmail,
+      password: userPassword,
     };
+
     var formBody = [];
     for (var key in dataToSend) {
       var encodedKey = encodeURIComponent(key);
@@ -61,8 +104,8 @@ const RegisterScreen = props => {
       formBody.push(encodedKey + '=' + encodedValue);
     }
     formBody = formBody.join('&');
-
-    fetch('https://aboutreact.herokuapp.com/register.php', {
+    console.log(formBody);
+    fetch('http://esunscope.org/cms/api/user/userreg', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -74,20 +117,31 @@ const RegisterScreen = props => {
       .then(responseJson => {
         //Hide Loader
         setLoading(false);
-        console.log(responseJson);
+        const first = responseJson[0];
+        if(first.username !=null )
+        {
+          setIsRegistraionSuccess(false);
+          setErrortext(first.username);
+        }
+        if(first.email !=null )
+        {
+          setIsRegistraionSuccess(false);
+          setErrortext(first.email);
+        }
         // If server response message same as Data Matched
-        if (responseJson.status == 1) {
+        if (first.msg != null) {
           setIsRegistraionSuccess(true);
           console.log('Registration Successful. Please Login to proceed');
         } else {
-          setIsRegistraionSuccess(true);
+          setIsRegistraionSuccess(false);
           setErrortext('Registration Unsuccessful');
         }
       })
       .catch(error => {
         //Hide Loader
         setLoading(false);
-        console.error(error);
+        
+        console.error("error ${error}");
       });
   };
   if (isRegistraionSuccess) {
@@ -95,7 +149,7 @@ const RegisterScreen = props => {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#307ecc',
+          backgroundColor: colors.BACKGROUND,
           justifyContent: 'center',
         }}>
         <Image
@@ -113,7 +167,7 @@ const RegisterScreen = props => {
     );
   }
   return (
-    <View style={{ flex: 1, backgroundColor: '#307ecc' }}>
+    <View style={styles.container}>
       <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center' }}>
@@ -131,78 +185,128 @@ const RegisterScreen = props => {
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Name"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
+              onChangeText={username => setUserName(username)}
+              placeholder="User Name"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='username'
               returnKeyType="next"
-              onSubmitEditing={() =>
-                this._emailinput && this._emailinput.focus()
-              }
+              /*onSubmitEditing={() =>
+                this._userlastnameinput && this._userlastnameinput.focus()
+              }*/
               blurOnSubmit={false}
             />
           </View>
           <View style={styles.SectionStyle}>
-          <TextInput
+            <TextInput
               style={styles.inputStyle}
-              onChangeText={UserName => setUserName(UserName)}
-              underlineColorAndroid="#FFFFFF"
-              placeholder="Enter Last Name"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
+              onChangeText={UserFirstName => setUserFirstName(UserFirstName)}
+              placeholder="Enter Name"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
               returnKeyType="next"
-              onSubmitEditing={() =>
-                this._emailinput && this._emailinput.focus()
-              }
+              /*onSubmitEditing={() =>
+                this._userlastnameinput && this._userlastnameinput.focus()
+              }*/
               blurOnSubmit={false}
             />
-            </View>
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={userLastName => setUserLastName(userLastName)}
+              placeholder="Enter Last Name"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              returnKeyType="next"
+              /*ref={ref => {
+                this._userlastnameinput = ref;
+              }}
+              onSubmitEditing={() =>
+                this._emailinput && this._emailinput.focus()
+              }*/
+              blurOnSubmit={false}
+            />
+          </View>
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
               onChangeText={UserEmail => setUserEmail(UserEmail)}
-              underlineColorAndroid="#F6F6F7"
-              placeholder="Enter Email or Mobile"
-              placeholderTextColor="#F6F6F7"
+              placeholder="Enter Email "
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
               keyboardType="email-address"
-              ref={ref => {
+              autoCompleteType='email'
+              returnKeyType="next"
+              /*ref={ref => {
                 this._emailinput = ref;
               }}
+              onSubmitEditing={() => this._passwordinput && this._passwordinput.focus()}
+              */
+              blurOnSubmit={false}
+            />
+          </View>
+          
+
+          <View style={styles.SectionMobileNumberStyle}>
+
+          <CountryPicker
+          disable={false}
+          animationType={'slide'}
+          containerStyle={styles.pickerStyle}
+          pickerTitleStyle={styles.pickerTitleStyle}
+          dropDownImage={require('../Images/ic_drop_down.png')}
+          selectedCountryTextStyle={styles.selectedCountryTextStyle}
+          countryNameTextStyle={styles.countryNameTextStyle}
+          pickerTitle={'Country Picker'}
+          searchBarPlaceHolder={'Search......'}
+          hideCountryFlag={false}
+          hideCountryCode={false}
+          searchBarStyle={styles.searchBarStyle}
+          backButtonImage={require('../Images/ic_back_black.png')}
+          searchButtonImage={require('../Images/ic_search.png')}
+          //countryCode={this.state.mCountryCode}
+          selectedValue={userCountryCode =>setUserCountryCode(userCountryCode)}
+        />
+            <TextInput
+              style={styles.inputStyle}
+              onChangeText={userMobileNumber => setUserMobileNumber(userMobileNumber)}
+              placeholder="Enter Mobile number"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='tel'
               returnKeyType="next"
-              onSubmitEditing={() => this._ageinput && this._ageinput.focus()}
+              /*ref={ref => {
+                this._emailinput = ref;
+              }}
+              onSubmitEditing={() => this._passwordinput && this._passwordinput.focus()}
+              */
               blurOnSubmit={false}
             />
           </View>
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserAge => setUserAge(UserAge)}
-              underlineColorAndroid="#F6F6F7"
+              onChangeText={userPassword => setUserPassword(userPassword)}
               placeholder="Enter Password"
-              placeholderTextColor="#F6F6F7"
-              keyboardType="numeric"
-              ref={ref => {
-                this._ageinput = ref;
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='password'
+              keyboardType="default"
+              /*ref={ref => {
+                this._passwordinput = ref;
               }}
               onSubmitEditing={() =>
-                this._addressinput && this._addressinput.focus()
-              }
+                this._userConfirmPasswordinput && this._userConfirmPasswordinput.focus()
+              }*/
               blurOnSubmit={false}
             />
           </View>
           <View style={styles.SectionStyle}>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={UserAddress => setUserAddress(UserAddress)}
-              underlineColorAndroid="#FFFFFF"
+              onChangeText={userConfirmPassword => setUserConfirmPassword(userConfirmPassword)}
               placeholder="Confirm Password"
-              placeholderTextColor="#F6F6F7"
-              autoCapitalize="sentences"
-              ref={ref => {
-                this._addressinput = ref;
-              }}
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              /*ref={ref => {
+                this._userConfirmPasswordinput = ref;
+              }}*/
               returnKeyType="next"
+              autoCompleteType='password'
               onSubmitEditing={Keyboard.dismiss}
               blurOnSubmit={false}
             />
@@ -213,7 +317,7 @@ const RegisterScreen = props => {
           <TouchableOpacity
             style={styles.buttonStyle}
             activeOpacity={0.5}
-            onPress={() => props.navigation.navigate('OtpVerification')}>
+            onPress={() => handleSubmitButton()}>
             <Text style={styles.buttonTextStyle}>REGISTER</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -224,40 +328,57 @@ const RegisterScreen = props => {
 export default RegisterScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex:1,
+    justifyContent: 'center',
+    backgroundColor: colors.BACKGROUND
+  },
+  
   SectionStyle: {
     flexDirection: 'row',
     height: 40,
     marginTop: 20,
-    marginLeft: 35,
-    marginRight: 35,
+    marginLeft: 30,
+    marginRight: 30,
     margin: 10,
   },
+
+  SectionMobileNumberStyle: {
+    flexDirection: 'row',
+    height: 40,
+    marginTop: 20,
+    
+    marginRight: 35,
+    justifyContent: 'space-between'
+  },
   buttonStyle: {
-    backgroundColor: '#7DE24E',
+    backgroundColor: colors.APP_YELLOW,
     borderWidth: 0,
     color: '#FFFFFF',
-    borderColor: '#7DE24E',
+    borderColor: '#7D624E',
     height: 40,
     alignItems: 'center',
-    borderRadius: 30,
+    
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
   },
   buttonTextStyle: {
-    color: '#FFFFFF',
+    color: colors.WHITE,
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight:'bold'
   },
   inputStyle: {
     flex: 1,
-    color: 'white',
+    color: colors.LIGHT_GREY_FONT,
     paddingLeft: 15,
     paddingRight: 15,
     borderWidth: 1,
-    borderRadius: 30,
-    borderColor: 'white',
+    fontSize:18,
+    backgroundColor: colors.WHITE,
+    borderColor: colors.BOARDER,
   },
   errorTextStyle: {
     color: 'red',
@@ -265,9 +386,51 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   successTextStyle: {
-    color: 'white',
+    color: colors.LIGHT_GREY_FONT,
     textAlign: 'center',
     fontSize: 18,
     padding: 30,
+  },
+  pickerTitleStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    marginLeft: 10,
+    fontSize: 16,
+    borderColor: colors.BOARDER,
+  },
+  pickerStyle: {
+    
+    color: 'white',
+    marginLeft:35,
+    marginRight:35,
+    height:40,
+    width:100,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: colors.BOARDER,
+    
+  },
+  selectedCountryTextStyle: {
+    paddingLeft: 5,
+    paddingRight: 5,
+    color: colors.LIGHT_GREY_FONT,
+    textAlign: 'right',
+  },
+ 
+  countryNameTextStyle: {
+    paddingLeft: 10,
+    color: '#000',
+    textAlign: 'right',
+  },
+ 
+  searchBarStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    flexDirection: 'row',
+    marginLeft: 8,
+    marginRight: 10,
   },
 });
