@@ -26,11 +26,11 @@ import ForgotPassword from './ForgotPassword';
 
 const { width, height } = Dimensions.get('window')
 
-const ASPECT_RATIO = width / height
-const LATITUDE = 22.7196
-const LONGITUDE = 75.8577
-const LATITUDE_DELTA = 0.0922
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
+var ASPECT_RATIO = width / height
+var LATITUDE = 21.7196
+var LONGITUDE = 75.8577
+var LATITUDE_DELTA = 0.0922
+var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
 let id = 0
 
 
@@ -65,12 +65,20 @@ class DrawRoofScreen extends Component {
             //getting the Longitude from the location json
             const currentLatitude = JSON.stringify(position.coords.latitude);
             //getting the Latitude from the location json
-            that.state.region.longitude = parseFloat(currentLongitude)
+            //that.state.region.longitude = parseFloat(currentLongitude)
             //that.setState({ currentLongitude:currentLongitude });
             //Setting state Longitude to re re-render the Longitude Text
-            that.state.region.latitude = parseFloat(currentLatitude)
+            //that.state.region.latitude = parseFloat(currentLatitude)
             //that.setState({ currentLatitude:currentLatitude });
             //Setting state Latitude to re re-render the Longitude Text
+            this.setState({
+              region: {
+                  latitude: parseFloat(currentLatitude),
+                  longitude: parseFloat(currentLongitude),
+                  latitudeDelta: 0.003,
+                  longitudeDelta: 0.003
+              }
+          });
             
           },
          (error) => alert(error.message),
@@ -85,10 +93,10 @@ class DrawRoofScreen extends Component {
           const currentLatitude = JSON.stringify(position.coords.latitude);
           //getting the Latitude from the location json
           //that.setState({ currentLongitude:currentLongitude });
-          that.state.region.longitude = parseFloat(currentLongitude)
+          //that.state.region.longitude = parseFloat(currentLongitude)
          //Setting state Longitude to re re-render the Longitude Text
           //that.setState({ currentLatitude:currentLatitude });
-          that.state.region.latitude = parseFloat(currentLatitude)
+          //that.state.region.latitude = parseFloat(currentLatitude)
          //Setting state Latitude to re re-render the Longitude Text
          this.setState({
           region: {
@@ -242,7 +250,7 @@ class DrawRoofScreen extends Component {
           style={styles.map}
           mapType={MAP_TYPES.SATELLITE}
           initialRegion={this.state.region}
-          //region={this.state.region}
+          region={this.state.region}
           onPress={e => this.onPress(e)}
           {...mapOptions}
         >
@@ -268,11 +276,12 @@ class DrawRoofScreen extends Component {
           )}
         </MapView>
         : null}
-        <View style={styles.map}>
+        
+        {/* <View style={styles.map}>
             <MapInput notifyChange={(loc) => this.getCoordsFromName(loc)
           
             }/>
-        </View>
+        </View> */}
 
         
         <TouchableOpacity

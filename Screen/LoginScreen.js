@@ -150,14 +150,25 @@ _getCurrentUserInfo = async () => {
         setLoading(false);
         console.log(responseJson);
         // If server response message same as Data Matched
-        if (responseJson.msg=="Successful") {
-          AsyncStorage.setItem('user_id', userEmail);
-          console.log(userEmail);
+
+        const first = responseJson;
+        console.log("here is all == "+first);
+        if(first.message ==='Successfull' )
+        {
+          console.log(first.data.id);
+          AsyncStorage.setItem('user_id', first.data.id);
+          AsyncStorage.setItem('username', first.data.username);
+          AsyncStorage.setItem('mobile', first.data.mobile);
+          AsyncStorage.setItem('firstname', first.data.firstname);
           props.navigation.navigate('DrawerNavigationRoutes');
-        } else {
+          
+        }else{
+          
           setErrortext('Please check your email id or password');
           console.log('Please check your email id or password');
         }
+
+        
       })
       .catch(error => {
         //Hide Loader
