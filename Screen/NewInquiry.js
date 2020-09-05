@@ -8,8 +8,6 @@ import { Container, Button } from "native-base";
 import DocumentPicker from 'react-native-document-picker';
 
 
-
-
 const NewInquiry = props => {
 
   let [userId, setuserId] = useState();
@@ -210,13 +208,17 @@ const NewInquiry = props => {
   
   handleUploadPhoto = (dataToSend) => {
     setTimeout(() => {
-      fetch("http://esunscope.org/cms/api/user/drawYourRoof", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'multipart/mixed ',
-      },
-      body: createFormData(singleFile,dataToSend)
-    })
+
+      const config = {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data;',
+           Authorization: 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH'
+        },
+        body: createFormData(singleFile,dataToSend)
+      };
+      fetch("http://esunscope.org/cms/api/user/drawYourRoof",config )
       .then(response => response.json())
       .then(response => {
         console.log("upload success", response);

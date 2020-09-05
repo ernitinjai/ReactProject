@@ -27,7 +27,7 @@ import ForgotPassword from './ForgotPassword';
 const { width, height } = Dimensions.get('window')
 
 var ASPECT_RATIO = width / height
-var LATITUDE = 21.7196
+var LATITUDE = 23.7196
 var LONGITUDE = 75.8577
 var LATITUDE_DELTA = 0.0922
 var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO

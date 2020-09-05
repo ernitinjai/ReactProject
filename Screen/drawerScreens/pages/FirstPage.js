@@ -131,7 +131,23 @@ const FirstPage = ({ props, navigation }) => {
               <Text>Status</Text>
             </Left>
             <Body>
-              <Text>{item.status}</Text>
+              <Text>{item.customerstatus}</Text>
+            </Body>
+
+          </CardItem>
+
+          <CardItem>
+            <Left>
+              <Text>Details</Text>
+            </Left>
+            <Body>
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              activeOpacity={0.5}
+              onPress={() => navigation.navigate('Details')}
+              >
+              <Text style={styles.buttonTextStyle}>Views</Text>
+            </TouchableOpacity>
             </Body>
 
           </CardItem>
@@ -225,6 +241,24 @@ const styles = StyleSheet.create({
   activityIndicator: {
     alignItems: 'center',
     height: 80,
+  },
+  buttonStyle: {
+    backgroundColor: '#FFCE4A',
+    borderWidth: 0,
+    color: '#FFFFFF',
+    borderColor: '#7DE24E',
+    height: 45,
+    width:80,
+    alignItems: 'center',
+    borderRadius: 30,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  buttonTextStyle: {
+    color: '#000000',
+    fontSize: 16,
   },
 });
 export default FirstPage;

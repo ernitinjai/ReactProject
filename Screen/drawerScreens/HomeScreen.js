@@ -17,6 +17,7 @@ import FirstPage from './pages/FirstPage';
 import SecondPage from './pages/SecondPage';
 import DrawRoofScreen from '../DrawRoofScreen';
 import NewInquiry from '../NewInquiry';
+import Details from '../Details';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -76,6 +77,7 @@ const HomeScreen = () => {
         <Stack.Screen name="TabStack" component={TabStack} options={{ title: ' e-Procurement' }}/>
         <Stack.Screen name="Draw roof" component={DrawRoofScreen}></Stack.Screen>
         <Stack.Screen name="NewInquiry" component={NewInquiry}></Stack.Screen>
+        <Stack.Screen name="Details" component={Details}></Stack.Screen>
     
       </Stack.Navigator>
     </NavigationContainer>

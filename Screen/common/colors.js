@@ -21,7 +21,8 @@ const colors = {
   APP_YELLOW:'#F5BA1B',
   BACKGROUND:'#ffffff',
   BOARDER:'#CCCCCC',
-  LIGHT_GREY_FONT:'#757575'
+  LIGHT_GREY_FONT:'#757575',
+  DARK_GREY_FONT:'#413825'
 };
 
 export default colors;
