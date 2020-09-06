@@ -86,11 +86,11 @@ const NewInquiry = props => {
   const createFormData = (photo, body) => {
     const data = new FormData();
   
-    data.append("bill_file", {
+    data.append("file", {
       name: photo.name,
-      type: photo.type,
-      uri:
-        Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      type: 'image/jpeg/jpg',
+      uri: 'file://' + photo.uri
+        //Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
     });
   
     Object.keys(body).forEach(key => {
@@ -100,7 +100,7 @@ const NewInquiry = props => {
     return data;
   };
 
-  let uploadInformation = async () => {
+  let uploadInformation = () => {
 
 
     /*var dataToSend = {
@@ -207,28 +207,31 @@ const NewInquiry = props => {
 
   
   handleUploadPhoto = (dataToSend) => {
-    setTimeout(() => {
+    const Token = 'secret'
 
       const config = {
         method: 'POST',
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'multipart/form-data;',
-           Authorization: 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH'
+          //Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${Token}`
+           //Authorization: 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH'
         },
         body: createFormData(singleFile,dataToSend)
       };
+
+
       fetch("http://esunscope.org/cms/api/user/drawYourRoof",config )
       .then(response => response.json())
       .then(response => {
         console.log("upload success", response);
         alert("Upload success!");
-        this.setState({ singleFile: null });
+        //this.setState({ singleFile: null });
       })
       .catch(error => {
         console.log("upload error ", error);
-        alert("Upload failed!"+error);
-      });},3000);
+        alert("Upload failed! "+error +singleFile.uri);
+      });
     
   };
   

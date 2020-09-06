@@ -251,7 +251,7 @@ const RegisterScreen = props => {
           animationType={'slide'}
           containerStyle={styles.pickerStyle}
           pickerTitleStyle={styles.pickerTitleStyle}
-          dropDownImage={require('../Images/ic_drop_down.png')}
+          //dropDownImage={require('../Images/ic_drop_down.png')}
           selectedCountryTextStyle={styles.selectedCountryTextStyle}
           countryNameTextStyle={styles.countryNameTextStyle}
           pickerTitle={'Country Picker'}
@@ -259,8 +259,8 @@ const RegisterScreen = props => {
           hideCountryFlag={false}
           hideCountryCode={false}
           searchBarStyle={styles.searchBarStyle}
-          backButtonImage={require('../Images/ic_back_black.png')}
-          searchButtonImage={require('../Images/ic_search.png')}
+          //backButtonImage={require('../Images/ic_back_black.png')}
+          //searchButtonImage={require('../Images/ic_search.png')}
           //countryCode={this.state.mCountryCode}
           selectedValue={userCountryCode =>setUserCountryCode(userCountryCode)}
         />
