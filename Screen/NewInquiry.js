@@ -1,12 +1,15 @@
 import React, { Component, useState, useEffect } from "react";
-import { StyleSheet, View, Text, ScrollView, 
-  TouchableOpacity, Keyboard, Picker, 
-  KeyboardAvoidingView, AsyncStorage ,YellowBox,PermissionsAndroid} from "react-native";
+import {
+  StyleSheet, View, Text, ScrollView,
+  TouchableOpacity, Keyboard, Picker,
+  KeyboardAvoidingView, AsyncStorage, YellowBox, PermissionsAndroid
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import RadioGroup from 'react-native-radio-button-group';
 import { Container, Button } from "native-base";
 import DocumentPicker from 'react-native-document-picker';
 
+import RNFetchBlob from 'rn-fetch-blob'
 
 const NewInquiry = props => {
 
@@ -41,14 +44,14 @@ const NewInquiry = props => {
         setuserId(userId)
       }
     });
-    
-      YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
 
-      if(Platform.OS === 'ios'){
-        //this.callLocation(that)
-      }else{
-          requestStoragePermission();
-      }
+    YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
+
+    if (Platform.OS === 'ios') {
+      //this.callLocation(that)
+    } else {
+      requestStoragePermission();
+    }
   }, [])
 
 
@@ -85,18 +88,18 @@ const NewInquiry = props => {
 
   const createFormData = (photo, body) => {
     const data = new FormData();
-  
+
     data.append("file", {
       name: photo.name,
       type: 'image/jpeg/jpg',
       uri: 'file://' + photo.uri
-        //Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+      //Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
     });
-  
+
     Object.keys(body).forEach(key => {
       data.append(key, body[key]);
     });
-  
+
     return data;
   };
 
@@ -129,29 +132,29 @@ const NewInquiry = props => {
 
     var dataToSend = {
       //Not sure about this data
-      countryshortcode:'IN',
-      stateshortcode:'RJ',
-      city:'Ajmer',
-      state:'rajasthan',
-      country:'india',
-      user_id: 20339,
-       
-       propertytype: 'Residential',
-       firstname: 'nitin',
-       lastname: 'userLastName',
-       mobile: 9752622533,
-       landline: 12,
-       address: 'userAddress',
-       lblcurrency: 'INR',
-       rooftype: 'userRoofType',
-       roofsize: 200,
-       refId: 'userRefferalId',
-       averagemonthly: 2000,
-       calltime: 'userBestTimeToCall',
-       comments: 'userComment',
-       pincode:302015,
-     };
- 
+      countryshortcode: 'IN',
+      stateshortcode: 'RJ',
+      city: 'Ajmer',
+      state: 'rajasthan',
+      country: 'india',
+      user_id: '20339',
+
+      propertytype: 'Residential',
+      firstname: 'nitin',
+      lastname: 'userLastName',
+      mobile: '9752622533',
+      landline: '12',
+      address: 'userAddress',
+      lblcurrency: 'INR',
+      rooftype: 'userRoofType',
+      roofsize: '200',
+      refId: 'userRefferalId',
+      averagemonthly: '2000',
+      calltime: 'userBestTimeToCall',
+      comments: 'userComment',
+      pincode: '302015',
+    };
+
 
     /*(var formBody = [];
     for (var key in dataToSend) {
@@ -160,7 +163,7 @@ const NewInquiry = props => {
       formBody.push(encodedKey + '=' + encodedValue);
     }
     formBody = formBody.join('&');*/
-    const formBody = createFormData(singleFile,dataToSend);
+    //const formBody = createFormData(singleFile, dataToSend);
     //alert(formBody);
 
     //Check if any file is selected or not
@@ -205,9 +208,9 @@ const NewInquiry = props => {
     }
   };
 
-  
+
   handleUploadPhoto = (dataToSend) => {
-    const Token = 'secret'
+    /*const Token = 'secret'
 
       const config = {
         method: 'POST',
@@ -231,10 +234,55 @@ const NewInquiry = props => {
       .catch(error => {
         console.log("upload error ", error);
         alert("Upload failed! "+error +singleFile.uri);
-      });
-    
+      });*/
+     
+    const fileUri = Platform.OS === "android" ? singleFile.uri : singleFile.uri.replace("file://", "");
+
+    console.log('fileUri '+ fileUri);
+    RNFetchBlob.fetch('POST', 'http://esunscope.org/cms/api/user/drawYourRoof', {
+      Authorization: "Bearer access-token",
+      otherHeader: "foo",
+      'Content-Type': 'multipart/form-data',
+    }, [
+      { name: 'bill_file', filename: singleFile.name, type: singleFile.type, data: RNFetchBlob.wrap(fileUri) },
+      {name: 'countryshortcode',data: 'IN'},
+      {name: 'stateshortcode', data: 'RJ'},
+      {name: 'city', data: 'Ajmer'},
+      {name: 'state', data: 'rajasthan'},
+      {name: 'country', data: 'india'},
+      {name: 'user_id', data: '20339'},
+
+      {name: 'propertytype', data: 'Residential'},
+      {name: 'firstname', data: 'nitin'},
+      {name: 'lastname', data: 'userLastName'},
+      {name: 'mobile', data: '9752622533'},
+      {name: 'landline', data: '12'},
+      {name: 'address', data: 'userAddress'},
+      {name: 'lblcurrency', data: 'INR'},
+      {name: 'rooftype', data: 'userRoofType'},
+      {name: 'roofsize', data: '200'},
+      {name: 'refId', data: 'userRefferalId'},
+      {name: 'averagemonthly', data: '2000'},
+      {name: 'calltime', data: 'userBestTimeToCall'},
+      {name: 'comments', data: 'userComment'},
+      {name: 'pincode', data: '302015',}
+
+    ]).uploadProgress({ interval: 250 }, (written, total) => {
+      console.log('uploaded', written / total)
+    })
+      // listen to download progress event, every 10%
+      .progress({ count: 10 }, (received, total) => {
+        console.log('progress', received / total)
+      }).then((resp) => {
+        console.log("upload succ ", resp);
+        alert("Upload succ! " + resp);
+      }).catch((err) => {
+        console.log("upload error ", err);
+        alert("Upload failed! " + err + singleFile.uri);
+      })
+
   };
-  
+
   const requestStoragePermission = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -278,8 +326,8 @@ const NewInquiry = props => {
               <View style={styles.spacer}>
                 <RadioGroup horizontal
                   options={radiogroup_options}
-                  //onChange={userPropertyType => setPropertyType(userPropertyType)} userPropertyType={userPropertyType}
-                  //onChange={(option) => setPropertyType({ userPropertyType: option })}
+                //onChange={userPropertyType => setPropertyType(userPropertyType)} userPropertyType={userPropertyType}
+                //onChange={(option) => setPropertyType({ userPropertyType: option })}
                 />
               </View>
             </View>
@@ -376,35 +424,35 @@ const NewInquiry = props => {
             </View>
 
 
-            
-              <View style={styles.spacer} >
-                <Text>
-                  <Text style={styles.labelHeader}> Roof Type </Text>
-                  <Text style={styles.subRedlabelHeader}>*</Text>
-                </Text>
-                <Picker 
-                  selectedValue={userRoofType}
-                  onValueChange={userRoofType => setRoofType(userRoofType)}>
-                  <Picker.Item label="Select Roof Type" value="Select Roof Type" />
-                  <Picker.Item label="Concrete" value="Concrete" />
-                  <Picker.Item label="Metal Sheet" value="Metal Sheet" />
-                  <Picker.Item label="Concrete + Metal Sheet" value="Concrete + Metal Sheet" />
-                  <Picker.Item label="Tiles Roof" value="Tiles Roof" />
-                  <Picker.Item label="Asphalt Roof" value="Asphalt Roof" />
-                  <Picker.Item label="Shed" value="Shed" />
-                  <Picker.Item label="Carport" value="Carport" />
-                  <Picker.Item label="Not Sure" value="Not Sure" />
 
-                </Picker>
+            <View style={styles.spacer} >
+              <Text>
+                <Text style={styles.labelHeader}> Roof Type </Text>
+                <Text style={styles.subRedlabelHeader}>*</Text>
+              </Text>
+              <Picker
+                selectedValue={userRoofType}
+                onValueChange={userRoofType => setRoofType(userRoofType)}>
+                <Picker.Item label="Select Roof Type" value="Select Roof Type" />
+                <Picker.Item label="Concrete" value="Concrete" />
+                <Picker.Item label="Metal Sheet" value="Metal Sheet" />
+                <Picker.Item label="Concrete + Metal Sheet" value="Concrete + Metal Sheet" />
+                <Picker.Item label="Tiles Roof" value="Tiles Roof" />
+                <Picker.Item label="Asphalt Roof" value="Asphalt Roof" />
+                <Picker.Item label="Shed" value="Shed" />
+                <Picker.Item label="Carport" value="Carport" />
+                <Picker.Item label="Not Sure" value="Not Sure" />
+
+              </Picker>
 
 
-              </View>
-              <View>
-                <Text style={styles.labelHeader}> Size (Sq.meters) * </Text>
-                <TextInput style={styles.whiteBoarderInputContainer}
-                  onChangeText={userRoofSize => setRoofSize(userRoofSize)} />
-              </View>
-            
+            </View>
+            <View>
+              <Text style={styles.labelHeader}> Size (Sq.meters) * </Text>
+              <TextInput style={styles.whiteBoarderInputContainer}
+                onChangeText={userRoofSize => setRoofSize(userRoofSize)} />
+            </View>
+
 
             <Text style={styles.labelHeader}> Referral Id </Text>
             <TextInput style={styles.whiteBoarderInputContainer}
