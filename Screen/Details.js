@@ -7,30 +7,34 @@ import colors from './common/colors';
 import AsyncStorage from '@react-native-community/async-storage';
 import { FlatGrid } from 'react-native-super-grid';
 
-const Details = ({ props, navigation }) => {
+const Details = ({ navigation }) => {
 
+    
+   
     let [animating, setLoading] = useState(false);
     let [errortext, setErrortext] = useState('');
     const [eData, setResponseDataState] = useState([]);
     let [isSubmittedSuccess, setIsSubmittedSuccess] = useState('false');
     const [items, setItems] = useState([
-        { name: 'Total Roof Area', code: '#1abc9c', image: require('../Images/icon_3.png') },
-        { name: 'Total Capacity in KW', code: '#2ecc71', image: require('../Images/capacity.png') },
-        { name: 'Approximate Cost(INR )', code: '#3498db', image: require('../Images/apporximatecost.png') },
-        { name: 'Payback Period', code: '#9b59b6', image: require('../Images/payback.png') },
-        { name: 'Usable Area', code: '#34495e', image: require('../Images/usablearea.png') },
-        { name: 'Annual energy in KWH', code: '#16a085', image: require('../Images/anualenergy.png') },
-        { name: 'Approximate Savings (INR )', code: '#27ae60', image: require('../Images/totalsaving.png') },
+        { name: 'Total Roof Area', code: global.roof_area, image: require('../Images/icon_3.png') },
+        { name: 'Total Capacity in KW', code: global.total_capacity, image: require('../Images/capacity.png') },
+        { name: 'Approximate Cost(INR )', code: global.apx_cost, image: require('../Images/apporximatecost.png') },
+        { name: 'Payback Period', code: global.payback_period, image: require('../Images/payback.png') },
+        { name: 'Usable Area', code: global.usable_area, image: require('../Images/usablearea.png') },
+        { name: 'Annual energy in KWH', code: global.annal_energy, image: require('../Images/anualenergy.png') },
+        { name: 'Approximate Savings (INR )', code: global.saving, image: require('../Images/totalsaving.png') },
 
     ]);
 
-
+   
 
     useEffect(() => {
         setLoading(true);
 
-        /*var _userId;
-        AsyncStorage.getItem('user_id').then((userId) => {
+        
+
+        var _userId;
+        /*AsyncStorage.getItem('user_id').then((userId) => {
           if(userId){
              this._userId = userId;
           }
@@ -84,14 +88,14 @@ const Details = ({ props, navigation }) => {
 
     const item =
     {
-        inquiry_nu: "RJ/IN/20200904/00695",
-        Property_Type: "Residential",
-        Land_Line: "",
-        Call_Time: "",
-        Mobile: "",
-        Average_Bill: "",
-        Roof_Size: "",
-        Inquiry_Date: "",
+        inquiry_nu: global.inquiry_nu,
+        Property_Type: global.Property_Type,
+        Land_Line: global.Land_Line,
+        Call_Time: global.Call_Time,
+        Mobile: global.Mobile,
+        Average_Bill: global.Average_Bill,
+        Roof_Size: global.Roof_Size,
+        Inquiry_Date: global.Inquiry_Date,
 
     }
 
@@ -227,8 +231,8 @@ const Details = ({ props, navigation }) => {
                 
                 <Text > Congratulations!</Text>
                 <Text >
-                Solar can save you INR 2,84,281.00/ year
-    Payback in about 3.54 years </Text>
+        Solar can save you INR {global.saving}/year
+    Payback in about {global.payback_period} years </Text>
             </View>
 
         )
@@ -240,6 +244,7 @@ const Details = ({ props, navigation }) => {
 
 
     return (
+
         <ScrollView style={{ flex: 1 }}>
             {renderHeader()}
             {
@@ -293,26 +298,6 @@ const Details = ({ props, navigation }) => {
                     </View>
                 )}
             />
-
-            <View >
-
-                {
-
-                    animating ?
-                        <ActivityIndicator
-                            animating={animating}
-                            color={colors.APP_YELLOW}
-                            size="large"
-                            style={styles.activityIndicator}
-                        />
-                        : null
-                }
-
-
-            </View>
-
-
-
 
             <Container style={{ padding: 15 }}>
                 {

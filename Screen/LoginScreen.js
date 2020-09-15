@@ -160,6 +160,7 @@ _getCurrentUserInfo = async () => {
           AsyncStorage.setItem('username', first.data.username);
           AsyncStorage.setItem('mobile', first.data.mobile);
           AsyncStorage.setItem('firstname', first.data.firstname);
+          AsyncStorage.setItem('lastname', first.data.lastname);
           props.navigation.navigate('DrawerNavigationRoutes');
           
         }else{

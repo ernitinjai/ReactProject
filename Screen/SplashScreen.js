@@ -19,11 +19,22 @@ const SplashScreen = props => {
       //Check if user_id is set or not
       //If not then send for Authentication
       //else send to Home Screen
-      AsyncStorage.getItem('user_id').then(value =>
+      /*AsyncStorage.setItem('user_id', first.data.id);
+          AsyncStorage.setItem('username', first.data.username);
+          AsyncStorage.setItem('mobile', first.data.mobile);
+          AsyncStorage.setItem('firstname', first.data.firstname);*/
+
+      AsyncStorage.getItem('user_id').then((value) => {
+        global.user_id = value
+        AsyncStorage.getItem('username').then(value =>global.username = value);
+        AsyncStorage.getItem('firstname').then(value =>global.firstname = value);
+        AsyncStorage.getItem('lastname').then(value =>global.lastname = value);
+        AsyncStorage.getItem('mobile').then(value =>global.mobile = value);
+
         props.navigation.navigate(
           value === null ? 'Auth' : 'DrawerNavigationRoutes'
         )
-      );
+      });
     }, 3000);
   }, []);
 
@@ -35,7 +46,7 @@ const SplashScreen = props => {
       />
       <ActivityIndicator
         animating={animating}
-        color = {colors.APP_YELLOW}
+        color={colors.APP_YELLOW}
         size="large"
         style={styles.activityIndicator}
       />

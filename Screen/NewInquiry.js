@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet, View, Text, ScrollView,
   TouchableOpacity, Keyboard, Picker,
-  KeyboardAvoidingView, AsyncStorage, YellowBox, PermissionsAndroid
+  KeyboardAvoidingView, AsyncStorage, YellowBox, PermissionsAndroid, ActivityIndicator
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import RadioGroup from 'react-native-radio-button-group';
@@ -10,10 +10,13 @@ import { Container, Button } from "native-base";
 import DocumentPicker from 'react-native-document-picker';
 
 import RNFetchBlob from 'rn-fetch-blob'
+import Details from "./Details";
+import colors from './common/colors';
 
-const NewInquiry = props => {
 
-  let [userId, setuserId] = useState();
+const NewInquiry = ({ props, navigation }) => {
+
+  
   let [userAddress, setAddress] = useState('');
   let [userPropertyType, setPropertyType] = useState('');
   let [userName, setFirstName] = useState('');
@@ -32,6 +35,7 @@ const NewInquiry = props => {
   let [errortext, setErrortext] = useState('');
   let [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
   let [singleFile, setSingleFile] = useState('');
+  let [animating, setAnimating] = useState(false);
 
   var radiogroup_options = [
     { id: 0, label: 'Residential' },
@@ -39,11 +43,7 @@ const NewInquiry = props => {
     { id: 2, label: 'Non-Profit' },
   ];
   useEffect(() => {
-    AsyncStorage.getItem('user_id').then((userId) => {
-      if (userId) {
-        setuserId(userId)
-      }
-    });
+    
 
     YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
 
@@ -130,7 +130,7 @@ const NewInquiry = props => {
       comments: userComment,
     };*/
 
-    var dataToSend = {
+    /*var dataToSend = {
       //Not sure about this data
       countryshortcode: 'IN',
       stateshortcode: 'RJ',
@@ -153,55 +153,10 @@ const NewInquiry = props => {
       calltime: 'userBestTimeToCall',
       comments: 'userComment',
       pincode: '302015',
-    };
-
-
-    /*(var formBody = [];
-    for (var key in dataToSend) {
-      var encodedKey = encodeURIComponent(key);
-      var encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');*/
-    //const formBody = createFormData(singleFile, dataToSend);
-    //alert(formBody);
-
-    //Check if any file is selected or not
-    //alert('uploadInformation');
+    };*/
     if (singleFile != null) {
-      //alert('singleFile is not null');
-      //If file selected then create FormData
-      /*const fileToUpload = singleFile;
-      const data = new FormData();
-      data.append('name', 'Image Upload');
-      data.append('bill_file', fileToUpload);
-      data.append('propertytype')*/
-      //Please change file upload URL
-      /*let res = await fetch(
-        'http://esunscope.org/cms/api/user/drawYourRoof',
-        {
-          method: 'post',
-          body: formBody,
-          headers: {
-            'Content-Type': 'multipart/mixed ',
-          },
-        }
-      );
-      try {
-        
-        alert('some serious issue '+res.status);
-        
-        let responseJson = await res.json();
-        if (responseJson.status == 1) {
-          alert('Upload Successful');
-        }
-        else {
-          alert('Upload issue');
-        }
-      } catch (err) {
-        alert('Unknown Error: ' + JSON.stringify(err));
-      }*/
-      handleUploadPhoto(dataToSend);
+
+      handleUploadPhoto();
     } else {
       //if no file selected the show alert
       console.log('Please Select File first');
@@ -209,63 +164,38 @@ const NewInquiry = props => {
   };
 
 
-  handleUploadPhoto = (dataToSend) => {
-    /*const Token = 'secret'
+  handleUploadPhoto = () => {
 
-      const config = {
-        method: 'POST',
-        headers: {
-          //Accept: 'application/json',
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Token ${Token}`
-           //Authorization: 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH'
-        },
-        body: createFormData(singleFile,dataToSend)
-      };
-
-
-      fetch("http://esunscope.org/cms/api/user/drawYourRoof",config )
-      .then(response => response.json())
-      .then(response => {
-        console.log("upload success", response);
-        alert("Upload success!");
-        //this.setState({ singleFile: null });
-      })
-      .catch(error => {
-        console.log("upload error ", error);
-        alert("Upload failed! "+error +singleFile.uri);
-      });*/
-     
+    setAnimating(true);
     const fileUri = Platform.OS === "android" ? singleFile.uri : singleFile.uri.replace("file://", "");
 
-    console.log('fileUri '+ fileUri);
+    console.log('fileUri ' + fileUri);
     RNFetchBlob.fetch('POST', 'http://esunscope.org/cms/api/user/drawYourRoof', {
       Authorization: "Bearer access-token",
       otherHeader: "foo",
       'Content-Type': 'multipart/form-data',
     }, [
       { name: 'bill_file', filename: singleFile.name, type: singleFile.type, data: RNFetchBlob.wrap(fileUri) },
-      {name: 'countryshortcode',data: 'IN'},
-      {name: 'stateshortcode', data: 'RJ'},
-      {name: 'city', data: 'Ajmer'},
-      {name: 'state', data: 'rajasthan'},
-      {name: 'country', data: 'india'},
-      {name: 'user_id', data: '20339'},
-
-      {name: 'propertytype', data: 'Residential'},
-      {name: 'firstname', data: 'nitin'},
-      {name: 'lastname', data: 'userLastName'},
-      {name: 'mobile', data: '9752622533'},
-      {name: 'landline', data: '12'},
-      {name: 'address', data: 'userAddress'},
-      {name: 'lblcurrency', data: 'INR'},
-      {name: 'rooftype', data: 'userRoofType'},
-      {name: 'roofsize', data: '200'},
-      {name: 'refId', data: 'userRefferalId'},
-      {name: 'averagemonthly', data: '2000'},
-      {name: 'calltime', data: 'userBestTimeToCall'},
-      {name: 'comments', data: 'userComment'},
-      {name: 'pincode', data: '302015',}
+      { name: 'countryshortcode', data: 'IN' },
+      { name: 'stateshortcode', data: 'RJ' },
+      { name: 'city', data: 'Ajmer' },
+      { name: 'state', data: 'rajasthan' },
+      { name: 'country', data: 'india' },
+      { name: 'propertytype', data: 'Residential' },
+      { name: 'user_id', data: global.user_id },
+      { name: 'firstname', data: userName },
+      { name: 'lastname', data: userLastName},
+      { name: 'mobile', data: userMobileNumber },
+      { name: 'landline', data: userLandlineNumber },
+      { name: 'address', data: userAddress },
+      { name: 'lblcurrency', data: userCurrency },
+      { name: 'rooftype', data: userRoofType},
+      { name: 'roofsize', data: userRoofSize },
+      { name: 'refId', data: userRefferalId },
+      { name: 'averagemonthly', data: userAME },
+      { name: 'calltime', data: userBestTimeToCall },
+      { name: 'comments', data: userComment },
+      { name: 'pincode', data: '302015', }
 
     ]).uploadProgress({ interval: 250 }, (written, total) => {
       console.log('uploaded', written / total)
@@ -273,10 +203,48 @@ const NewInquiry = props => {
       // listen to download progress event, every 10%
       .progress({ count: 10 }, (received, total) => {
         console.log('progress', received / total)
-      }).then((resp) => {
-        console.log("upload succ ", resp);
-        alert("Upload succ! " + resp);
+      }).then(response => response.json())
+      .then(responseJson => {
+
+        setAnimating(false);
+        var jsonStringify = JSON.stringify(responseJson);
+        var customername = JSON.parse(jsonStringify);
+
+        if (customername[0].status == "error") {
+
+          
+          alert(customername[0].message);
+
+
+          
+        }
+        else {
+
+          console.log("customername ==  ", customername[0].data.firstname);
+          console.log("customername ==  ", customername[0].data.inquirydata.enquiryno);
+          //AsyncStorage.setItem('draw_roof_response', customername[0].data);
+          var information = customername[0].data.inquirydata;
+          global.roof_area = information.roofsize;
+          global.total_capacity = information.totalpvcapacity;
+          global.apx_cost = information.c_netcost;
+          global.payback_period = information.c_payback;
+          global.usable_area = information.useablearea;
+          global.annal_energy = information.averageannualgeneration;
+          global.saving = information.saving_per_year;
+
+
+          global.inquiry_nu = information.enquiryno;
+          global.Property_Type = information.propertytype;
+          global.Land_Line = information.landline;
+          global.Call_Time = information.calltime;
+          global.Average_Bill = information.averageannualgeneration;
+          global.Roof_Size = information.roofsize;
+          global.Inquiry_Date = information.createdDtm;
+          navigation.navigate('Details')
+        }
+        
       }).catch((err) => {
+        setAnimating(false);
         console.log("upload error ", err);
         alert("Upload failed! " + err + singleFile.uri);
       })
@@ -313,6 +281,8 @@ const NewInquiry = props => {
       <ScrollView keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView>
           <View>
+
+
 
             <Text style={styles.sectionHeader}>
               <Text > Address  </Text>
@@ -462,10 +432,17 @@ const NewInquiry = props => {
             <TextInput style={styles.whiteBoarderInputContainer}
               onChangeText={userComment => setComments(userComment)} />
 
+            <ActivityIndicator
+              animating={animating}
+              color={colors.APP_YELLOW}
+              size="large"
+              style={styles.activityIndicator}
+            />
+
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={uploadInformation}>
+              onPress={handleUploadPhoto}>
               <Text style={styles.buttonTextStyle}>Calculate your Savings</Text>
             </TouchableOpacity>
           </View>
@@ -567,6 +544,10 @@ const styles = StyleSheet.create({
   buttonTextStyle: {
     color: '#000000',
     fontSize: 16,
+  },
+  activityIndicator: {
+    alignItems: 'center',
+    height: 80,
   },
 
 });

@@ -18,14 +18,8 @@ const FirstPage = ({ props, navigation }) => {
   useEffect(() => {
     setLoading(true);
 
-    var _userId;
-    AsyncStorage.getItem('user_id').then((userId) => {
-      if(userId){
-         this._userId = userId;
-      }
-    });
     var dataToSend = {
-      user_id: _userId,
+      user_id: global.user_id,
     }
 
     var formBody = [];
@@ -76,6 +70,16 @@ const FirstPage = ({ props, navigation }) => {
     console.log(" eData ==" + JSON.stringify(eData));
 
     let post = [];
+
+    if(eData.length == 0){
+      post.push(
+
+        <View>
+          <Text>No Record Found , Please start your first inquiry with clicking on DRAW ROOF </Text>
+        </View>
+      )
+    }
+     
 
     eData.map((item) => {
       post.push(
@@ -144,7 +148,8 @@ const FirstPage = ({ props, navigation }) => {
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={() => navigation.navigate('Details')}
+              onPress={() => {getDetails(item.enquiryid)}}
+              
               >
               <Text style={styles.buttonTextStyle}>Views</Text>
             </TouchableOpacity>
@@ -156,6 +161,72 @@ const FirstPage = ({ props, navigation }) => {
     });
     return post;
   };
+
+  
+
+  function getDetails(item){
+    setLoading(true);
+
+    var dataToSend = {
+      user_id: global.user_id,
+      enquiryid :item
+    }
+
+    var formBody = [];
+    for (var key in dataToSend) {
+      var encodedKey = encodeURIComponent(key);
+      var encodedValue = encodeURIComponent(dataToSend[key]);
+      formBody.push(encodedKey + '=' + encodedValue);
+    }
+    formBody = formBody.join('&');
+    console.log("formBody == " + formBody);
+    fetch('http://esunscope.org/cms/api/user/usersitedetail', {
+
+      method: 'post',
+      body: formBody,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8 ',
+      },
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        setLoading(false);
+        var jsonStringify = JSON.stringify(responseJson);
+        var details = JSON.parse(jsonStringify);
+
+        if (details[0].status == "error") {
+
+          
+          alert(details[0].message);
+
+
+          
+        }
+        else {
+          var information = details[0].data.sitedetail;
+          global.roof_area = information.roofsize;
+          global.total_capacity = information.totalpvcapacity;
+          global.apx_cost = information.c_netcost;
+          global.payback_period = information.c_payback;
+          global.usable_area = information.useablearea;
+          global.annal_energy = information.averageannualgeneration;
+          global.saving = information.saving_per_year;
+          global.inquiry_nu = information.enquiryno;
+          global.Property_Type = information.propertytype;
+          global.Land_Line = information.landline;
+          global.Call_Time = information.calltime;
+          global.Average_Bill = information.averageannualgeneration;
+          global.Roof_Size = information.roofsize;
+          global.Inquiry_Date = information.createdDtm;
+          navigation.navigate('Details');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+  }
+  
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

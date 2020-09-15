@@ -12,11 +12,27 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 import HomeScreen from './drawerScreens/HomeScreen';
 import SettingsScreen from './drawerScreens/SettingsScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
+import ContactUs from './drawerScreens/ContactUs';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
+import EditProfile from './EditProfile';
 
 const FirstActivity_StackNavigator = createStackNavigator({
   First: {
     screen: HomeScreen,
+    navigationOptions: ({ navigation }) => ({
+      title: 'eSunScope',
+      headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+      headerStyle: {
+        backgroundColor: '#307ecc',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
+const EditProfileActivity_StackNavigator = createStackNavigator({
+  First: {
+    screen: EditProfile,
     navigationOptions: ({ navigation }) => ({
       title: 'eSunScope',
       headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
@@ -42,6 +58,20 @@ const SecondActivity_StackNavigator = createStackNavigator({
   },
 });
 
+const ThirdActivity_StackNavigator = createStackNavigator({
+  First: {
+    screen: ContactUs,
+    navigationOptions: ({ navigation }) => ({
+      title: 'Contact Us',
+      headerLeft: () => <NavigationDrawerHeader navigationProps={navigation} />,
+      headerStyle: {
+        backgroundColor: '#307ecc',
+      },
+      headerTintColor: '#fff',
+    }),
+  },
+});
+
 const DrawerNavigatorRoutes = createDrawerNavigator(
   {
     HomeScreen: {
@@ -50,10 +80,23 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
         drawerLabel: 'Home Screen',
       },
     },
+
+    EditProfile: {
+      screen: EditProfileActivity_StackNavigator,
+      navigationOptions: {
+        drawerLabel: 'Edit Profile',
+      },
+    },
     SettingsScreen: {
       screen: SecondActivity_StackNavigator,
       navigationOptions: {
         drawerLabel: 'Setting Screen',
+      },
+    },
+    ContactUs: {
+      screen: ThirdActivity_StackNavigator,
+      navigationOptions: {
+        drawerLabel: 'Contact Us',
       },
     },
   },

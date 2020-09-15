@@ -9,10 +9,17 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const CustomSidebarMenu = props => {
+
+  
+
   let items = [
     {
-      navOptionName: 'Edit Profile',
+      navOptionName: 'Home Screen',
       screenToNavigate: 'HomeScreen',
+    },
+    {
+      navOptionName: 'Edit Profile',
+      screenToNavigate: 'EditProfile',
     },
     {
       navOptionName: 'About eSunScope',
@@ -20,7 +27,7 @@ const CustomSidebarMenu = props => {
     },
     {
       navOptionName: 'Contact us',
-      screenToNavigate: 'logout',
+      screenToNavigate: 'ContactUs',
     },
     {
       navOptionName: 'Log out',
@@ -63,10 +70,10 @@ const CustomSidebarMenu = props => {
       <View style={stylesSidebar.profileHeader}>
         <View style={stylesSidebar.profileHeaderPicCircle}>
           <Text style={{ fontSize: 25, color: '#307ecc' }}>
-            {'About React'.charAt(0)}
+            {global.firstname}.charAt(0)
           </Text>
         </View>
-        <Text style={stylesSidebar.profileHeaderText}>User name</Text>
+        <Text style={stylesSidebar.profileHeaderText}>{global.firstname}</Text>
       </View>
       <View style={stylesSidebar.profileHeaderLine} />
       <View style={{ width: '100%', flex: 1 }}>
