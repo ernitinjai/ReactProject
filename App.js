@@ -7,6 +7,7 @@ import React from 'react';
 //Import Navigators from React Navigation
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import auth from '@react-native-firebase/auth';
 
 //Import all the screens needed
 import SplashScreen from './Screen/SplashScreen';

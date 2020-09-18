@@ -18,6 +18,8 @@ import SecondPage from './pages/SecondPage';
 import DrawRoofScreen from '../DrawRoofScreen';
 import NewInquiry from '../NewInquiry';
 import Details from '../Details';
+import FeasibilityStudy from '../FeasibilityStudy';
+import BiddingStatus from '../BiddingStatus';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -78,6 +80,9 @@ const HomeScreen = () => {
         <Stack.Screen name="Draw roof" component={DrawRoofScreen}></Stack.Screen>
         <Stack.Screen name="NewInquiry" component={NewInquiry}></Stack.Screen>
         <Stack.Screen name="Details" component={Details}></Stack.Screen>
+        <Stack.Screen name="FeasibilityStudy" component={FeasibilityStudy}></Stack.Screen>
+        <Stack.Screen name="BiddingStatus" component={BiddingStatus}></Stack.Screen>
+        
     
       </Stack.Navigator>
     </NavigationContainer>

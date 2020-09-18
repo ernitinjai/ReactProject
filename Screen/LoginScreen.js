@@ -23,6 +23,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-community/google-signin';
+import auth from '@react-native-firebase/auth';
 
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from './Components/loader';
@@ -76,7 +77,7 @@ const LoginScreen = props => {
     } else {
       // some other error happened
       console.log(error);
-      alert('some other error happened '+error.code);
+      alert('some other error happened '+error);
     }
   }
 };
@@ -101,9 +102,9 @@ _getCurrentUserInfo = async () => {
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
-        '784687718989-vrb197k7ha70cckjgrg3c0h6o4dhgof8.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-      iosClientId:'784687718989-l2vkljud95au545isl425uqhcj4tc3cp.apps.googleusercontent.com'
+        '784687718989-627cmsrdfvr47jbv03g0981qgci839qc.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      //iosClientId:'784687718989-l2vkljud95au545isl425uqhcj4tc3cp.apps.googleusercontent.com'
     });
   }, []);
   const signOut = async () => {

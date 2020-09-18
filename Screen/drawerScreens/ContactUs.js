@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 
 //Import all required component
-import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, ImageBackground, TouchableOpacity ,Linking} from 'react-native';
 import { FlatGrid } from 'react-native-super-grid';
 import colors from '../common/colors';
 

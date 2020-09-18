@@ -2,22 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<key>LSApplicationQueriesSchemes</key>
-<array>
-    <string>whatsapp</string>
-<string>twitter</string>
-</array>
-
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>*your app name* would like to save photos from the app to your gallery</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>*your app name* would like to access your photo gallery for uploading images to the app</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>For choosing a photo.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>For taking a photo.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>For saving a photo.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -29,7 +13,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleGetInfoString</key>
-	<string/>
+	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -64,7 +48,12 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+		<string>twitter</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -80,8 +69,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>For taking a photo.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We will need to access to draw roof at your location</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>For saving a photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>For choosing a photo.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>

@@ -23,11 +23,12 @@ import { color } from 'react-native-reanimated';
 import MapInput from './Components/MapInput';
 import { Left } from 'native-base';
 import ForgotPassword from './ForgotPassword';
+import { Directions } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window')
 
 var ASPECT_RATIO = width / height
-var LATITUDE = 23.7196
+var LATITUDE = 123.7196
 var LONGITUDE = 75.8577
 var LATITUDE_DELTA = 0.0922
 var LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO
@@ -86,11 +87,12 @@ class DrawRoofScreen extends Component {
       );
       that.watchID = Geolocation.watchPosition((position) => {
         //Will give you the location on location change
-          console.log('so'+position);
+          
           //alert(position.coords.longitude);
           const currentLongitude = JSON.stringify(position.coords.longitude);
           //getting the Longitude from the location json
           const currentLatitude = JSON.stringify(position.coords.latitude);
+          //alert('so'+currentLongitude+" "+currentLatitude);
           //getting the Latitude from the location json
           //that.setState({ currentLongitude:currentLongitude });
           //that.state.region.longitude = parseFloat(currentLongitude)
@@ -148,6 +150,7 @@ class DrawRoofScreen extends Component {
    editing: null,
    creatingHole: false,
   });
+  console.log("finished "+polygons.length);
   }
 
   clear = () => {
@@ -161,6 +164,7 @@ class DrawRoofScreen extends Component {
   createHole() {
     const { editing, creatingHole } = this.state
     if (!creatingHole) {
+      console.log("creatingHole is false , now making it true")
       this.setState({
         creatingHole: true,
         editing: {
@@ -168,6 +172,7 @@ class DrawRoofScreen extends Component {
           holes: [...editing.holes, []]
         }
       })
+      
     } else {
       const holes = [...editing.holes]
       if (holes[holes.length - 1].length === 0) {
@@ -184,9 +189,12 @@ class DrawRoofScreen extends Component {
   }
 
   onPress(e) {
-    console.log(this.state.polygons)
+    console.log("polygon "+this.state.polygons)
+    
     const { editing, creatingHole } = this.state
+    
     if (!editing) {
+      console.log("editing is false ")
       this.setState({
         editing: {
           id: id++,
@@ -194,14 +202,20 @@ class DrawRoofScreen extends Component {
           holes: []
         }
       })
+      
     } else if (!creatingHole) {
+      console.log("creatingHole is false ")
       this.setState({
         editing: {
           ...editing,
           coordinates: [...editing.coordinates, e.nativeEvent.coordinate]
         }
       })
+
+      console.log("length 1 =  "+JSON.stringify(this.state.editing.coordinates));
+      
     } else {
+      console.log("creatingHole is true and editing is true ")
       const holes = [...editing.holes]
       holes[holes.length - 1] = [
         ...holes[holes.length - 1],
@@ -215,6 +229,8 @@ class DrawRoofScreen extends Component {
           holes
         }
       })
+      console.log("length =  "+this.state.editing.coordinates);
+      
     }
   }
 
@@ -223,8 +239,8 @@ class DrawRoofScreen extends Component {
         region: {
             latitude: loc.lat,
             longitude: loc.lng,
-            latitudeDelta: 0.003,
-            longitudeDelta: 0.003
+            latitudeDelta: 0.001,
+            longitudeDelta: 0.001
         }
     });
   }
@@ -242,15 +258,24 @@ class DrawRoofScreen extends Component {
     
 
     return (
+
+      <View flex= {1}>
+        <View  >
+            <MapInput notifyChange={(loc) => this.getCoordsFromName(loc)
+            }/>
+        </View> 
       <View style={styles.container}>
-      {
-      this.state.region['latitude'] ?
         <MapView
+          
           provider={PROVIDER_GOOGLE}
           style={styles.map}
           mapType={MAP_TYPES.SATELLITE}
           initialRegion={this.state.region}
-          region={this.state.region}
+          //showsUserLocation={true}
+          //onMapReady={this.onMapReady}
+          //onRegionChangeComplete={this.onRegionChange}
+          //onRegionChangeComplete={this.state.region}
+          //region={this.state.region}
           onPress={e => this.onPress(e)}
           {...mapOptions}
         >
@@ -270,18 +295,14 @@ class DrawRoofScreen extends Component {
               coordinates={this.state.editing.coordinates}
               holes={this.state.editing.holes}
               strokeColor="#000"
-              fillColor="rgba(255,0,0,0.5)"
+              fillColor="rgba(255,255,0,0.5)"
               strokeWidth={1}
             />
           )}
         </MapView>
-        : null}
+  
         
-        {/* <View style={styles.map}>
-            <MapInput notifyChange={(loc) => this.getCoordsFromName(loc)
-          
-            }/>
-        </View> */}
+       
 
         
         <TouchableOpacity
@@ -319,6 +340,7 @@ class DrawRoofScreen extends Component {
           <Text>Clear</Text>
         </TouchableOpacity>
       </View>
+      </View>
     )
   }
 }
@@ -331,10 +353,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop:55,
   },
   map: {
-    ...StyleSheet.absoluteFillObject
+   
+    ...StyleSheet.absoluteFillObject,
+
   },
   nextbubble: {
     ...StyleSheet.absoluteFillObject,
@@ -370,16 +395,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'transparent'
   },
-  inputStyle: {
-    color: 'white',
-    paddingLeft: 15,
-    paddingRight: 15,
-    height:40,
-    margin:15,
-    borderWidth: 1,
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    borderColor: 'white',
-  }
+  
 })
 
 export default DrawRoofScreen;

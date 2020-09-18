@@ -13,7 +13,7 @@ const FirstPage = ({ props, navigation }) => {
   const [eData, setResponseDataState] = useState([]);
   let [isSubmittedSuccess, setIsSubmittedSuccess] = useState('false');
 
-  
+
 
   useEffect(() => {
     setLoading(true);
@@ -71,105 +71,112 @@ const FirstPage = ({ props, navigation }) => {
 
     let post = [];
 
-    if(eData.length == 0){
+    if (eData.length == 0) {
       post.push(
 
         <View>
           <Text>No Record Found , Please start your first inquiry with clicking on DRAW ROOF </Text>
         </View>
       )
-    }
-     
+    } else {
 
-    eData.map((item) => {
-      post.push(
-        <Card key={item} >
-          <CardItem>
-            <Left>
+
+      eData.map((item) => {
+        post.push(
+          <Card key={item} >
+            <CardItem>
+              <Left>
+                <Body>
+                  <Text>No:</Text>
+                  <Text>{item.enquiryid}</Text>
+
+                </Body>
+              </Left>
+
               <Body>
-                <Text>No:</Text>
-                <Text>{item.enquiryid}</Text>
-
+                <Text>Inquiry No:</Text>
+                <Text>{item.enquiryno}</Text>
               </Body>
-            </Left>
+              <Right>
+                <Text>Inquiry Date:</Text>
+                <Text>{item.createdDtm}</Text>
+              </Right>
 
-            <Body>
-              <Text>Inquiry No:</Text>
-              <Text>{item.enquiryno}</Text>
-            </Body>
-            <Right>
-              <Text>Inquiry Date:</Text>
-              <Text>{item.createdDtm}</Text>
-            </Right>
+            </CardItem>
 
-          </CardItem>
-
-          <View style={styles.lineStyle} />
+            <View style={styles.lineStyle} />
 
 
-          <CardItem>
-            <Left>
+            <CardItem>
+              <Left>
 
 
-              <Text>Property Type:</Text>
-            </Left>
-            <Body>
+                <Text>Property Type:</Text>
+              </Left>
+              <Body>
 
-              <Text>{item.propertytype}</Text>
-            </Body>
+                <Text>{item.propertytype}</Text>
+              </Body>
 
-          </CardItem>
+            </CardItem>
 
-          <CardItem>
-            <Left>
-              <Text>Address</Text>
-            </Left>
-            <Body>
-              <Text>{item.Address}</Text>
-            </Body>
+            <CardItem>
+              <Left>
+                <Text>Address</Text>
+              </Left>
+              <Body>
+                <Text>{item.Address}</Text>
+              </Body>
 
-          </CardItem>
+            </CardItem>
 
-          <CardItem>
-            <Left>
-              <Text>Status</Text>
-            </Left>
-            <Body>
-              <Text>{item.customerstatus}</Text>
-            </Body>
+            <CardItem>
+              <Left>
+                <Text>Status</Text>
+              </Left>
+              <Body>{
+                <TouchableOpacity
 
-          </CardItem>
+                  onPress={() => navigation.navigate('FeasibilityStudy')}
+                >
+                  <Text>{item.customerstatus}</Text>
+                </TouchableOpacity>
+              }
+              </Body>
 
-          <CardItem>
-            <Left>
-              <Text>Details</Text>
-            </Left>
-            <Body>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              activeOpacity={0.5}
-              onPress={() => {getDetails(item.enquiryid)}}
-              
-              >
-              <Text style={styles.buttonTextStyle}>Views</Text>
-            </TouchableOpacity>
-            </Body>
+            </CardItem>
 
-          </CardItem>
-        </Card>
-      );
-    });
+            <CardItem>
+              <Left>
+                <Text>Details</Text>
+              </Left>
+              <Body>
+                <TouchableOpacity
+                  style={styles.buttonStyle}
+                  activeOpacity={0.5}
+                  onPress={() => { getDetails(item.enquiryid) }}
+
+                >
+                  <Text style={styles.buttonTextStyle}>Views</Text>
+                </TouchableOpacity>
+              </Body>
+
+            </CardItem>
+          </Card>
+        );
+      });
+    }
     return post;
   };
 
-  
 
-  function getDetails(item){
+
+  function getDetails(item) {
     setLoading(true);
 
     var dataToSend = {
       user_id: global.user_id,
-      enquiryid :item
+      enquiryid: item
     }
 
     var formBody = [];
@@ -196,11 +203,11 @@ const FirstPage = ({ props, navigation }) => {
 
         if (details[0].status == "error") {
 
-          
+
           alert(details[0].message);
 
 
-          
+
         }
         else {
           var information = details[0].data.sitedetail;
@@ -219,6 +226,7 @@ const FirstPage = ({ props, navigation }) => {
           global.Roof_Size = information.roofsize;
           global.Inquiry_Date = information.createdDtm;
           navigation.navigate('Details');
+
         }
       })
       .catch((error) => {
@@ -226,7 +234,7 @@ const FirstPage = ({ props, navigation }) => {
       });
 
   }
-  
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -256,8 +264,8 @@ const FirstPage = ({ props, navigation }) => {
       <View >
 
         {
-          
-          animating  ?
+
+          animating ?
             <ActivityIndicator
               animating={animating}
               color={colors.APP_YELLOW}
@@ -269,7 +277,7 @@ const FirstPage = ({ props, navigation }) => {
 
 
       </View>
-      
+
 
 
 
@@ -319,7 +327,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     borderColor: '#7DE24E',
     height: 45,
-    width:80,
+    width: 80,
     alignItems: 'center',
     borderRadius: 30,
     marginLeft: 35,

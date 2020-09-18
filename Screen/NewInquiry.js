@@ -1,12 +1,14 @@
 import React, { Component, useState, useEffect } from "react";
 import {
   StyleSheet, View, Text, ScrollView,
-  TouchableOpacity, Keyboard, Picker,
+  TouchableOpacity, Keyboard, TextInput,
   KeyboardAvoidingView, AsyncStorage, YellowBox, PermissionsAndroid, ActivityIndicator
 } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import RadioGroup from 'react-native-radio-button-group';
-import { Container, Button } from "native-base";
+
+import {Picker} from '@react-native-community/picker';
+
+//import RadioGroup from '@react-native-radio-button-group';
+
 import DocumentPicker from 'react-native-document-picker';
 
 import RNFetchBlob from 'rn-fetch-blob'
@@ -14,9 +16,9 @@ import Details from "./Details";
 import colors from './common/colors';
 
 
-const NewInquiry = ({ props, navigation }) => {
+const NewInquiry = ({ navigation }) => {
 
-  
+
   let [userAddress, setAddress] = useState('');
   let [userPropertyType, setPropertyType] = useState('');
   let [userName, setFirstName] = useState('');
@@ -43,9 +45,9 @@ const NewInquiry = ({ props, navigation }) => {
     { id: 2, label: 'Non-Profit' },
   ];
   useEffect(() => {
-    
 
-    YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
+
+    //YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
 
     if (Platform.OS === 'ios') {
       //this.callLocation(that)
@@ -164,7 +166,7 @@ const NewInquiry = ({ props, navigation }) => {
   };
 
 
-  handleUploadPhoto = () => {
+  function handleUploadPhoto() {
 
     setAnimating(true);
     const fileUri = Platform.OS === "android" ? singleFile.uri : singleFile.uri.replace("file://", "");
@@ -184,12 +186,12 @@ const NewInquiry = ({ props, navigation }) => {
       { name: 'propertytype', data: 'Residential' },
       { name: 'user_id', data: global.user_id },
       { name: 'firstname', data: userName },
-      { name: 'lastname', data: userLastName},
+      { name: 'lastname', data: userLastName },
       { name: 'mobile', data: userMobileNumber },
       { name: 'landline', data: userLandlineNumber },
       { name: 'address', data: userAddress },
       { name: 'lblcurrency', data: userCurrency },
-      { name: 'rooftype', data: userRoofType},
+      { name: 'rooftype', data: userRoofType },
       { name: 'roofsize', data: userRoofSize },
       { name: 'refId', data: userRefferalId },
       { name: 'averagemonthly', data: userAME },
@@ -212,11 +214,11 @@ const NewInquiry = ({ props, navigation }) => {
 
         if (customername[0].status == "error") {
 
-          
+
           alert(customername[0].message);
 
 
-          
+
         }
         else {
 
@@ -242,7 +244,7 @@ const NewInquiry = ({ props, navigation }) => {
           global.Inquiry_Date = information.createdDtm;
           navigation.navigate('Details')
         }
-        
+
       }).catch((err) => {
         setAnimating(false);
         console.log("upload error ", err);
@@ -294,11 +296,7 @@ const NewInquiry = ({ props, navigation }) => {
             <View style={styles.spacer}>
               <Text style={styles.labelHeader}> Your Property Type </Text>
               <View style={styles.spacer}>
-                <RadioGroup horizontal
-                  options={radiogroup_options}
-                //onChange={userPropertyType => setPropertyType(userPropertyType)} userPropertyType={userPropertyType}
-                //onChange={(option) => setPropertyType({ userPropertyType: option })}
-                />
+                
               </View>
             </View>
 
@@ -431,13 +429,14 @@ const NewInquiry = ({ props, navigation }) => {
             <Text style={styles.labelHeader}> Comments </Text>
             <TextInput style={styles.whiteBoarderInputContainer}
               onChangeText={userComment => setComments(userComment)} />
-
-            <ActivityIndicator
-              animating={animating}
-              color={colors.APP_YELLOW}
-              size="large"
-              style={styles.activityIndicator}
-            />
+            <View>
+              <ActivityIndicator
+                animating={animating}
+                color={colors.APP_YELLOW}
+                size="large"
+                style={styles.activityIndicator}
+              />
+            </View>
 
             <TouchableOpacity
               style={styles.buttonStyle}
@@ -505,6 +504,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     height: 50,
+
     color: '#000000',
     borderColor: '#E5E5E5',
     padding: 5,
