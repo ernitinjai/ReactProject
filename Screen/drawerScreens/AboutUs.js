@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 //Import all required component
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
-const SettingsScreen = () => {
+const AboutUs = () => {
 
   const [socialItems, setSocialItems] = useState([
     { name: 'The rooftop Solar market is defragmented with lack of standards in major equipment’s, installation practices and testing protocols. Hence buying the PV system off the shelf without worrying about quality, reliability and market standards is still not possible. Most Solar adopters have different focus area or expertise and having a paid consultancy is not economical always, which leaves Solar Adopters wondering how to go about it, what to buy, how to buy and make sure that the asset has a good design and operating life.', image: require('../../Images/about1.png') },
@@ -113,4 +113,4 @@ const styles = StyleSheet.create({
   }
 
 })
-export default SettingsScreen;
+export default AboutUs;

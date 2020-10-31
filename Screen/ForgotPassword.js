@@ -17,6 +17,7 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   TouchableOpacity,
+  Dimensions,
   ScrollView,
 } from 'react-native';
 import Loader from './Components/loader';
@@ -102,10 +103,10 @@ const ForgotPassword = props => {
           />
         </View>
         <KeyboardAvoidingView enabled>
-          
+          <View style={styles.roundrectangleContainer}>
           <View style={styles.SectionStyle}>
             <TextInput
-              style={styles.inputStyle}
+              style={styles.textInputStyle}
               onChangeText={userName => setUserName(userName)}
               placeholder="Enter Email or Mobile"
               placeholderTextColor={colors.LIGHT_GREY_FONT}
@@ -124,27 +125,43 @@ const ForgotPassword = props => {
             onPress={handleSubmitButton}>
             <Text style={styles.buttonTextStyle}>Reset Password</Text>
           </TouchableOpacity>
+           </View>
         </KeyboardAvoidingView>
+       
       </ScrollView>
     </View>
   );
 };
 export default ForgotPassword;
-
-const styles = StyleSheet.create({
+var height = Dimensions.get('window').height; 
+const styles = StyleSheet.create(
+  {
   SectionStyle: {
     flexDirection: 'row',
-    height: 40,
+    justifyContent: 'center',
+    height: 45,
     marginTop: 20,
     marginLeft: 35,
     marginRight: 35,
     margin: 10,
+    borderRadius: 15,
+    backgroundColor: colors.WHITE,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
   },
+
   buttonStyle: {
     backgroundColor: colors.APP_YELLOW,
     borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#7DE24E',
+    color: colors.FONT_COLOR_ON_YELLOW,
+    borderColor: colors.BOARDER,
     height: 40,
     alignItems: 'center',
     
@@ -152,21 +169,32 @@ const styles = StyleSheet.create({
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    borderRadius: 15,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   buttonTextStyle: {
-    color: colors.WHITE,
+    color: colors.FONT_COLOR_ON_YELLOW,
     paddingVertical: 10,
-    fontSize: 16,
+    fontSize: 18,
+    fontWeight:'bold'
+    
   },
-  inputStyle: {
-    flex: 1,
-    color: colors.LIGHT_GREY_FONT,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 1,
-    fontSize:18,
-    backgroundColor: colors.WHITE,
-    borderColor: colors.BOARDER,
+  textInputStyle: {
+    width:300,
+    color: colors.CRED_BLACK,
+    paddingVertical: 10,
+    fontSize: 18,
+    fontWeight:'bold',
+    
+    
   },
   errorTextStyle: {
     color: 'red',
@@ -178,5 +206,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     padding: 30,
+  },
+  roundrectangleContainer:
+  {
+    flex: 1,
+    backgroundColor: colors.DARK_GREY,
+    paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+    height: height*.80,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: "hidden"
   },
 });

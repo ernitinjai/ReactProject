@@ -1,5 +1,5 @@
 
-
+#import <Firebase.h>
 #import "AppDelegate.h"
 
 #import <React/RCTBridge.h>
@@ -14,7 +14,7 @@
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
 #import <GoogleMaps/GoogleMaps.h>
-
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -31,14 +31,19 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-   
+  if ([FIRApp defaultApp] == nil) {
+    [FIRApp configure];
+  }
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
   
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-  [GMSServices provideAPIKey:@"AIzaSyAeCppYyxhk5oILgO-zry_8KBAKdWgqIzA"];
   
-
+  
+[GMSServices provideAPIKey:@"AIzaSyAeCppYyxhk5oILgO-zry_8KBAKdWgqIzA"];
+  //[GMSPlacesClient provideAPIKey:@"AIzaSyAeCppYyxhk5oILgO-zry_8KBAKdWgqIzA"];
 
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
@@ -63,6 +68,15 @@ static void InitializeFlipper(UIApplication *application) {
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [[FBSDKApplicationDelegate sharedInstance]application:app
+                                                       openURL:url
+                                                       options:options];
 }
 
 @end

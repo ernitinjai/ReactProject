@@ -5,21 +5,25 @@ import {
   KeyboardAvoidingView, AsyncStorage, YellowBox, PermissionsAndroid, ActivityIndicator
 } from "react-native";
 
-import {Picker} from '@react-native-community/picker';
 
-//import RadioGroup from '@react-native-radio-button-group';
+
+//import RadioGroup from 'react-native-radio-button-group';
+import RadioGroup from 'react-native-radio-buttons-group';
+
+import {Picker} from '@react-native-community/picker';
 
 import DocumentPicker from 'react-native-document-picker';
 
 import RNFetchBlob from 'rn-fetch-blob'
 import Details from "./Details";
 import colors from './common/colors';
+//import { Colors } from "react-native/Libraries/NewAppScreen";
 
 
-const NewInquiry = ({ navigation }) => {
+const NewInquiry = ({ props, navigation }) => {
 
 
-  let [userAddress, setAddress] = useState('');
+  let [userAddress, setAddress] = useState(global.mapaddress);
   let [userPropertyType, setPropertyType] = useState('');
   let [userName, setFirstName] = useState('');
   let [userLastName, setLastName] = useState('');
@@ -38,12 +42,23 @@ const NewInquiry = ({ navigation }) => {
   let [isSubmittedSuccess, setIsSubmittedSuccess] = useState(false);
   let [singleFile, setSingleFile] = useState('');
   let [animating, setAnimating] = useState(false);
+  let [propertyType, setpropertyType] = useState({data: [
+    {
+        label: 'Residential',
+    },
+    {
+        label: 'Commercial',
+    },
+    {
+        label: 'Non-Profit',
+    },
+],});
 
-  var radiogroup_options = [
-    { id: 0, label: 'Residential' },
-    { id: 1, label: 'Commercial' },
-    { id: 2, label: 'Non-Profit' },
-  ];
+  let selectedButton = propertyType.data.find(e => e.selected == true);
+  selectedButton = selectedButton ? selectedButton.value : propertyType.data[0].label;
+  let onPress = data => setpropertyType({ data }); 
+
+  
   useEffect(() => {
 
 
@@ -88,7 +103,7 @@ const NewInquiry = ({ navigation }) => {
     }
   };
 
-  const createFormData = (photo, body) => {
+  /*8const createFormData = (photo, body) => {
     const data = new FormData();
 
     data.append("file", {
@@ -103,59 +118,9 @@ const NewInquiry = ({ navigation }) => {
     });
 
     return data;
-  };
+  };*/
 
-  let uploadInformation = () => {
-
-
-    /*var dataToSend = {
-     //Not sure about this data
-     countryshortcode:'IN',
-     stateshortcode:'RJ',
-     city:'Ajmer',
-     state:'Ra',
-     country:'india',
-      user_id: 20339,
-      bill_file: singleFile,
-      propertytype: 'Residential',
-      firstname: userName,
-      lastname: userLastName,
-      mobile: userMobileNumber,
-      landline: userLandlineNumber,
-      address: userAddress,
-      lblcurrency: userCurrency,
-      rooftype: userRoofType,
-      roofsize: userRoofSize,
-      refId: userRefferalId,
-      averagemonthly: userAME,
-      calltime: userBestTimeToCall,
-      comments: userComment,
-    };*/
-
-    /*var dataToSend = {
-      //Not sure about this data
-      countryshortcode: 'IN',
-      stateshortcode: 'RJ',
-      city: 'Ajmer',
-      state: 'rajasthan',
-      country: 'india',
-      user_id: '20339',
-
-      propertytype: 'Residential',
-      firstname: 'nitin',
-      lastname: 'userLastName',
-      mobile: '9752622533',
-      landline: '12',
-      address: 'userAddress',
-      lblcurrency: 'INR',
-      rooftype: 'userRoofType',
-      roofsize: '200',
-      refId: 'userRefferalId',
-      averagemonthly: '2000',
-      calltime: 'userBestTimeToCall',
-      comments: 'userComment',
-      pincode: '302015',
-    };*/
+  /*let uploadInformation = () => {
     if (singleFile != null) {
 
       handleUploadPhoto();
@@ -163,41 +128,155 @@ const NewInquiry = ({ navigation }) => {
       //if no file selected the show alert
       console.log('Please Select File first');
     }
+  };*/
+  
+  const createFormData = (photo, body) => {
+    const data = new FormData();
+  
+    data.append("photo", {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
+    });
+  
+    Object.keys(body).forEach(key => {
+      data.append(key, body[key]);
+    });
+  
+    return data;
   };
 
+  function newhandleUploadPhoto(){
+    setAnimating(true);
+    fetch("http://esunscope.org/cms/api/user/drawYourRoof", {
+      method: "POST",
+      body: createFormData(singleFile, { countryshortcode: global.mapcountry, countryshortcode:  global.mapcountry ,
+         stateshortcode: global.mapstate ,
+         city: global.mapcity ,
+         state: global.mapstate ,
+         country: global.mapcountry ,
+         pincode: global.mappincode ,
+         propertytype: selectedButton ,
+        user_id: global.user_id   ,
+          firstname : global.firstname   ,
+          lastname : global.lastname   ,
+          mobile : global.mobile   ,
+        //   name: 'landline : userLandlineNumber   ,
+          address : userAddress   ,
+          lblcurrency : userCurrency   ,
+          rooftype : userRoofType   ,
+          roofsize : global.areaCalc   ,
+          refId : userRefferalId   ,
+          averagemonthly : userAME   ,
+          calltime : userBestTimeToCall   ,
+          comments : userComment   ,
+          longitude:global.longitude  ,
+          latitude:global.latitude  })
+    })
+      .then(response => response.text())
+      .then(response => {
+        setAnimating(false);
+        // console.log("upload succes", response);
+        // alert("Upload success!");
+        // navigation.navigate('Details');
+        var jsonStringify = JSON.stringify(response);
+       // alert(jsonStringify);
+        var data = JSON.parse(jsonStringify);
+
+        if (data[0].status == "error") {
+
+          alert(data[0].message);
+
+        }
+        else {
+          alert("Upload Successful!");
+          navigation.navigate('Details');
+        }
+
+        //this.setState({ photo: null });
+      })
+      .catch(error => {
+        setAnimating(false);
+        console.log("upload error", error);
+        alert("Upload failed!"+error);
+      });
+  };
 
   function handleUploadPhoto() {
 
+    
+    var fileUri="";
+    if(singleFile.uri){
+     fileUri = Platform.OS === "android" ? singleFile.uri : singleFile.uri.replace("file://", "");
+    }else{
+      
+      return;
+    }
+    //alert("*******"+fileUri);
     setAnimating(true);
-    const fileUri = Platform.OS === "android" ? singleFile.uri : singleFile.uri.replace("file://", "");
-
     console.log('fileUri ' + fileUri);
+
+    /*let bodyData=
+    [
+      { name: 'bill_file', filename: singleFile.name, type: singleFile.type, data: RNFetchBlob.wrap(fileUri) },
+      { countryshortcode:  global.mapcountry },
+      { stateshortcode: global.mapstate },
+      { city: global.mapcity },
+      { state: global.mapstate },
+      { country: global.mapcountry },
+      { pincode: global.mappincode },
+      { propertytype: selectedButton },
+      { user_id: global.user_id },
+      { firstname : global.firstname },
+      { lastname : global.lastname },
+      { mobile : global.mobile },
+      // { name: 'landline : userLandlineNumber },
+      { address : userAddress },
+      { lblcurrency : userCurrency },
+      { rooftype : userRoofType },
+      { roofsize : global.areaCalc },
+      { refId : userRefferalId },
+      { averagemonthly : userAME },
+      { calltime : userBestTimeToCall },
+      { comments : userComment },
+      { longitude:global.longitude},
+      { latitude:global.latitude},
+    ];
+
+    bodyData.map(n => (
+      console.log("**********"+JSON.stringify(n))
+    ));*/
+
+
     RNFetchBlob.fetch('POST', 'http://esunscope.org/cms/api/user/drawYourRoof', {
-      Authorization: "Bearer access-token",
-      otherHeader: "foo",
+      
       'Content-Type': 'multipart/form-data',
     }, [
       { name: 'bill_file', filename: singleFile.name, type: singleFile.type, data: RNFetchBlob.wrap(fileUri) },
-      { name: 'countryshortcode', data: 'IN' },
-      { name: 'stateshortcode', data: 'RJ' },
-      { name: 'city', data: 'Ajmer' },
-      { name: 'state', data: 'rajasthan' },
-      { name: 'country', data: 'india' },
-      { name: 'propertytype', data: 'Residential' },
-      { name: 'user_id', data: global.user_id },
-      { name: 'firstname', data: userName },
-      { name: 'lastname', data: userLastName },
-      { name: 'mobile', data: userMobileNumber },
-      { name: 'landline', data: userLandlineNumber },
-      { name: 'address', data: userAddress },
-      { name: 'lblcurrency', data: userCurrency },
-      { name: 'rooftype', data: userRoofType },
-      { name: 'roofsize', data: userRoofSize },
-      { name: 'refId', data: userRefferalId },
-      { name: 'averagemonthly', data: userAME },
-      { name: 'calltime', data: userBestTimeToCall },
-      { name: 'comments', data: userComment },
-      { name: 'pincode', data: '302015', }
+      { countryshortcode:  global.mapcountry },
+      { stateshortcode: global.mapstate },
+      { city: global.mapcity },
+      { state: global.mapstate },
+      { country: global.mapcountry },
+      { pincode: global.mappincode },
+      { propertytype: selectedButton },
+      { user_id: global.user_id },
+      { firstname : global.firstname },
+      { lastname : global.lastname },
+      { mobile : global.mobile },
+      // { name: 'landline : userLandlineNumber },
+      { address : userAddress },
+      { lblcurrency : userCurrency },
+      { rooftype : userRoofType },
+      { roofsize : global.areaCalc },
+      { refId : userRefferalId },
+      { averagemonthly : userAME },
+      { calltime : userBestTimeToCall },
+      { comments : userComment },
+      { longitude:global.longitude},
+      { latitude:global.latitude},
+      
 
     ]).uploadProgress({ interval: 250 }, (written, total) => {
       console.log('uploaded', written / total)
@@ -205,11 +284,12 @@ const NewInquiry = ({ navigation }) => {
       // listen to download progress event, every 10%
       .progress({ count: 10 }, (received, total) => {
         console.log('progress', received / total)
-      }).then(response => response.json())
+      }).then(response => response.text())
       .then(responseJson => {
 
         setAnimating(false);
         var jsonStringify = JSON.stringify(responseJson);
+        alert(jsonStringify);
         var customername = JSON.parse(jsonStringify);
 
         if (customername[0].status == "error") {
@@ -222,10 +302,10 @@ const NewInquiry = ({ navigation }) => {
         }
         else {
 
-          console.log("customername ==  ", customername[0].data.firstname);
-          console.log("customername ==  ", customername[0].data.inquirydata.enquiryno);
+          //console.log("customername ==  ", customername[0].data.firstname);
+          //console.log("customername ==  ", customername[0].data.inquirydata.enquiryno);
           //AsyncStorage.setItem('draw_roof_response', customername[0].data);
-          var information = customername[0].data.inquirydata;
+          /*var information = customername[0].data.inquirydata;
           global.roof_area = information.roofsize;
           global.total_capacity = information.totalpvcapacity;
           global.apx_cost = information.c_netcost;
@@ -241,7 +321,7 @@ const NewInquiry = ({ navigation }) => {
           global.Call_Time = information.calltime;
           global.Average_Bill = information.averageannualgeneration;
           global.Roof_Size = information.roofsize;
-          global.Inquiry_Date = information.createdDtm;
+          global.Inquiry_Date = information.createdDtm;*/
           navigation.navigate('Details')
         }
 
@@ -277,30 +357,32 @@ const NewInquiry = ({ navigation }) => {
     }
   };
 
-
+  
   return (
+    
     <View style={styles.container}>
       <ScrollView keyboardShouldPersistTaps="handled">
         <KeyboardAvoidingView>
           <View>
-
-
-
             <Text style={styles.sectionHeader}>
               <Text > Address  </Text>
               <Text style={styles.subRedlabelHeader}> * </Text>
             </Text>
-            <TextInput style={styles.whiteBoarderInputContainer}
+            <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10,styles.addressFieldHeight]}
+              defaultValue = {global.mapaddress}
+              multiline={true}
               onChangeText={userAddress => setAddress(userAddress)} />
 
             <View style={styles.spacer}>
               <Text style={styles.labelHeader}> Your Property Type </Text>
               <View style={styles.spacer}>
-                
+              <View style={styles.container}>
+                <RadioGroup radioButtons={propertyType.data} onPress={onPress} flexDirection='row'/>
+            </View>
               </View>
             </View>
 
-            <Text style={styles.sectionHeader}> Personal Information </Text>
+            {/* <Text style={styles.sectionHeader}> Personal Information </Text>
             <View style={styles.rowContainer}>
               <View style={styles.fieldStyle} >
                 <Text>
@@ -334,10 +416,10 @@ const NewInquiry = ({ navigation }) => {
                 <TextInput style={styles.whiteBoarderInputContainer}
                   onChangeText={userLandlineNumber => setLandlineNumber(userLandlineNumber)} />
               </View>
-            </View>
+            </View> */}
 
             <Text style={styles.labelHeader}> Best Time to call </Text>
-            <TextInput style={styles.whiteBoarderInputContainer}
+            <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10]}
               onChangeText={userBestTimeToCall => setBestTimeToCall(userBestTimeToCall)} />
 
             <Text style={styles.sectionHeader}> Site Information </Text>
@@ -351,9 +433,11 @@ const NewInquiry = ({ navigation }) => {
               <Picker
                 selectedValue={userCurrency}
                 onValueChange={userCurrency => setCurrency(userCurrency)}>
+                <Picker.Item label="INR" value="Rupeese" />
+                <Picker.Item label="DHS" value="Dirham" />
                 <Picker.Item label="USD" value="US Dollars" />
                 <Picker.Item label="EUR" value="Euro" />
-                <Picker.Item label="NGN" value="Naira" />
+                
               </Picker>
 
 
@@ -363,7 +447,7 @@ const NewInquiry = ({ navigation }) => {
                 <Text style={styles.labelHeader}> Average Monthly electricity </Text>
                 <Text style={styles.subRedlabelHeader}>*</Text>
               </Text>
-              <TextInput style={styles.whiteBoarderInputContainer}
+              <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10]}
                 onChangeText={userAME => setAvgMonthlyElectricity(userAME)} />
             </View>
 
@@ -417,17 +501,18 @@ const NewInquiry = ({ navigation }) => {
             </View>
             <View>
               <Text style={styles.labelHeader}> Size (Sq.meters) * </Text>
-              <TextInput style={styles.whiteBoarderInputContainer}
-                onChangeText={userRoofSize => setRoofSize(userRoofSize)} />
+              <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10]}
+                value ={global.areaCalc}
+                />
             </View>
 
 
             <Text style={styles.labelHeader}> Referral Id </Text>
-            <TextInput style={styles.whiteBoarderInputContainer}
+            <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10]}
               onChangeText={userRefferalId => setRefferalId(userRefferalId)} />
 
             <Text style={styles.labelHeader}> Comments </Text>
-            <TextInput style={styles.whiteBoarderInputContainer}
+            <TextInput style={[styles.whiteBoarderInputContainer,styles.margin10]}
               onChangeText={userComment => setComments(userComment)} />
             <View>
               <ActivityIndicator
@@ -435,13 +520,17 @@ const NewInquiry = ({ navigation }) => {
                 color={colors.APP_YELLOW}
                 size="large"
                 style={styles.activityIndicator}
+                
               />
+               
             </View>
+
+            
 
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={handleUploadPhoto}>
+              onPress={newhandleUploadPhoto}>
               <Text style={styles.buttonTextStyle}>Calculate your Savings</Text>
             </TouchableOpacity>
           </View>
@@ -493,6 +582,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 
+  margin10:{
+    padding:15,
+    textAlignVertical: 'center',
+    alignItems:'center',
+    justifyContent: 'center',
+    color:colors.CRED_FONT_BRONZE,
+    fontSize:18
+
+  },
+
+  progressBar: {
+    height: 20,
+    width: '100%',
+    backgroundColor: 'white',
+    borderColor: '#000',
+    borderWidth: 2,
+    borderRadius: 5
+  },
+
 
   rowContainer: {
     flex: 1,
@@ -507,7 +615,21 @@ const styles = StyleSheet.create({
 
     color: '#000000',
     borderColor: '#E5E5E5',
-    padding: 5,
+    margin:10,
+    justifyContent: 'center',
+    borderRadius: 30,
+    //borderColor: colors.WHITE,
+    shadowColor: colors.LIGHT_GREY_FONT,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
+  },
+  addressFieldHeight:{
+     height:100,
   },
   fieldStyle: {
     width: '50%',
@@ -524,8 +646,21 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     color: '#000000',
     borderColor: '#000000',
-    height: 45,
+    height: 35,
+    width:140,
     alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 30,
+    backgroundColor: colors.APP_YELLOW,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
   },
 
   buttonStyle: {
@@ -540,6 +675,18 @@ const styles = StyleSheet.create({
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
+    justifyContent: 'center',
+    backgroundColor: colors.APP_YELLOW,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
+    
   },
   buttonTextStyle: {
     color: '#000000',

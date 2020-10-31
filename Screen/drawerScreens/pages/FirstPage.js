@@ -1,10 +1,13 @@
 // React Native Tab - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-tab //
-import React, { Component, useState, useEffect } from 'react'
-import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, SafeAreaView } from 'react-native';
+import React, { Component, useState, useEffect } from 'react';
+import { NavigationActions } from 'react-navigation';
+
+import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, SafeAreaView, Image, Dimensions,Alert } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
 import colors from '../../common/colors';
 import AsyncStorage from '@react-native-community/async-storage';
+import RNExitApp from 'react-native-exit-app';
 
 const FirstPage = ({ props, navigation }) => {
 
@@ -53,17 +56,112 @@ const FirstPage = ({ props, navigation }) => {
 
   }, []);
 
+  let headerImagesStatus = () => {
+    let post = [];
+    post.push(
+      <Card >
 
-  //this.state = { DATA };
+        <CardItem style={styles.headerStyleImage}>
+          <Left  >
 
-  /*state = {
-    DATA: [
-      { id: 1, inquiry_no: 1234, property_type: "residential", address: "Hare krishna vihar, Nipania, Indore", inquiry_date: "22/3/2020", status: "In process" },
-      { id: 2, inquiry_no: 12356, property_type: "self", address: "Indore 23", inquiry_date: "21/4/2020", status: "Completed" },
-      { id: 3, inquiry_no: 12367, property_type: "building", address: "Indore 12345", inquiry_date: "19/3/2020", status: "In process" },
+            <Body style={styles.iconContainerLeft}>
+              <TouchableOpacity
 
-    ]
-  };*/
+                activeOpacity={0.5}
+                onPress={() => navigation.navigate('EditProfile')}
+
+              >
+                <Image style={styles.iconImageContainerLeft}
+                  source={require('../../../Images/profile.png')}
+
+                />
+                {/* <Text style={styles.headerImageText}>
+
+                  {global.firstname}</Text> */}
+              </TouchableOpacity>
+            </Body>
+          </Left>
+
+
+          <Right>
+            <TouchableOpacity
+
+              activeOpacity={0.5}
+              onPress={() => navigation.navigate('EditProfile')}
+
+            >
+              <Body style={styles.iconContainerRight}>
+                <Image style={styles.iconImageContainer}
+                  source={require('../../../Images/notification.png')}
+
+                />
+                <Text style={styles.headerImageText}>Notification</Text>
+              </Body>
+            </TouchableOpacity>
+          </Right>
+
+          <Right >
+            <Body style={styles.iconContainerRight}>
+              <TouchableOpacity
+
+                activeOpacity={0.5}
+                onPress={() => onLogoutPress()}
+
+              >
+                <Image style={styles.iconImageContainer}
+                  source={require('../../../Images/control.png')}
+                />
+                <Text style={styles.headerImageText}>Log Out</Text>
+              </TouchableOpacity>
+            </Body>
+          </Right>
+
+        </CardItem>
+
+      </Card>
+    )
+
+    return post;
+
+  }
+
+  function onLogoutPress(){
+    Alert.alert(
+      'Logout',
+      'Are you sure , Application will exit to completely log out ? You want to logout?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => {
+            return null;
+          },
+        },
+        {
+          text: 'Confirm',
+          onPress: () => {
+
+            AsyncStorage.clear().then(() => RNExitApp.exitApp())
+            //AsyncStorage.clear();
+            /*navigation.navigate(
+              'Auth', 
+              {}, 
+              NavigationActions.navigate({ 
+                  routeName: 'LoginScreen' 
+              }))*/
+           // navigation.navigate('LoginScreen')
+            //navigation.replace('LoginScreen');
+           // navigation.popToTop();
+            //navigation.goBack(null);
+            //console.log('logout');
+            
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+
 
   let renderpostTypes = () => {
 
@@ -75,7 +173,7 @@ const FirstPage = ({ props, navigation }) => {
       post.push(
 
         <View>
-          <Text>No Record Found , Please start your first inquiry with clicking on DRAW ROOF </Text>
+          <Text style={{color: colors.CRED_FONT_BRONZE,margin:20}}>No Record Found , Please start your first inquiry with clicking on DRAW ROOF </Text>
         </View>
       )
     } else {
@@ -83,23 +181,50 @@ const FirstPage = ({ props, navigation }) => {
 
       eData.map((item) => {
         post.push(
-          <Card key={item} >
-            <CardItem>
+
+          <Card key={item} style={styles.roundrectangleContainer}>
+            <CardItem  style={styles.backgroundContainer}>
               <Left>
                 <Body>
-                  <Text>No:</Text>
-                  <Text>{item.enquiryid}</Text>
+                  {/* <Text style={styles.boldText}>No:</Text> */}
+                  <Text style={styles.boldText}>Inquiry No:</Text>
+
+                  {/* <Text>{item.enquiryid}</Text> */}
 
                 </Body>
               </Left>
 
-              <Body>
-                <Text>Inquiry No:</Text>
+              {/* <Body>
+                { <Text style={styles.boldText}>Inquiry No:</Text> 
                 <Text>{item.enquiryno}</Text>
-              </Body>
+              </Body> */}
               <Right>
-                <Text>Inquiry Date:</Text>
-                <Text>{item.createdDtm}</Text>
+                <Text>{item.enquiryno}</Text>
+                {/* <Text style={styles.boldText}>Inquiry Date:</Text>
+                <Text>{item.createdDtm}</Text> */}
+              </Right>
+
+            </CardItem>
+
+            <CardItem style={styles.backgroundContainer}>
+              <Left>
+                <Body>
+                  {/* <Text style={styles.boldText}>No:</Text> */}
+                  <Text style={styles.boldText}>Inquiry Date:</Text>
+
+                  {/* <Text>{item.enquiryid}</Text> */}
+
+                </Body>
+              </Left>
+
+              {/* <Body>
+                { <Text style={styles.boldText}>Inquiry No:</Text> 
+                <Text>{item.enquiryno}</Text>
+              </Body> */}
+              <Right>
+              <Text>{item.createdDtm}</Text>
+                {/* <Text style={styles.boldText}>Inquiry Date:</Text>
+                <Text>{item.createdDtm}</Text> */}
               </Right>
 
             </CardItem>
@@ -107,50 +232,50 @@ const FirstPage = ({ props, navigation }) => {
             <View style={styles.lineStyle} />
 
 
-            <CardItem>
+            <CardItem style={styles.backgroundContainer}>
               <Left>
 
 
-                <Text>Property Type:</Text>
+                <Text style={styles.boldText}>Property Type:</Text>
               </Left>
-              <Body>
+              <Right>
 
                 <Text>{item.propertytype}</Text>
-              </Body>
+              </Right>
 
             </CardItem>
 
-            <CardItem>
+            <CardItem style={styles.backgroundContainer}>
               <Left>
-                <Text>Address</Text>
+                <Text style={styles.boldText}>Address</Text>
               </Left>
-              <Body>
+              <Right>
                 <Text>{item.Address}</Text>
-              </Body>
+              </Right>
 
             </CardItem>
 
-            <CardItem>
+            <CardItem style={styles.backgroundContainer}>
               <Left>
-                <Text>Status</Text>
+                <Text style={styles.boldText}>Status</Text>
               </Left>
-              <Body>{
+              <Right>{
                 <TouchableOpacity
 
-                  onPress={() => navigation.navigate('FeasibilityStudy')}
+                  onPress={() => onHandleButtonPress(item.customerstatus)}
                 >
-                  <Text>{item.customerstatus}</Text>
+                  <Text style={styles.underLineText}>{item.customerstatus}</Text>
                 </TouchableOpacity>
               }
-              </Body>
+              </Right>
 
             </CardItem>
 
-            <CardItem>
+            <CardItem style={styles.backgroundContainer}>
               <Left>
-                <Text>Details</Text>
+                <Text style={styles.boldText}>Details</Text>
               </Left>
-              <Body>
+              <Right>
                 <TouchableOpacity
                   style={styles.buttonStyle}
                   activeOpacity={0.5}
@@ -159,20 +284,38 @@ const FirstPage = ({ props, navigation }) => {
                 >
                   <Text style={styles.buttonTextStyle}>Views</Text>
                 </TouchableOpacity>
-              </Body>
+              </Right>
 
             </CardItem>
           </Card>
+
         );
       });
     }
     return post;
   };
 
+  function onHandleButtonPress(item) {
+    if (item === "Bid Preparation In Progress") {
+      //alert("Create bid screen");
+      navigation.navigate('BidsList');
+
+    } else if (item === "") {
+      navigation.navigate('FeasibilityStudy');
+    } else if (item == "In Process") {
+
+      getDetails(item.enquiryid);
+      //alert("We will notify you as soon as possible");
+    } else if (item == "Installation Phase") {
+      navigation.navigate('ProjectImplementation');
+    }
+  }
+
 
 
   function getDetails(item) {
     setLoading(true);
+    global.enquiryid = item;
 
     var dataToSend = {
       user_id: global.user_id,
@@ -237,27 +380,47 @@ const FirstPage = ({ props, navigation }) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ padding: 16, alignItems: "center" }}>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: 'row'
-          }}>
-          <Text
-            style={{
-              fontSize: 18,
-              textAlign: 'center'
+    <SafeAreaView style={styles.mainContainer}>
 
-            }}>
-            Request new Plant
+
+
+      <View  >
+        {headerImagesStatus()}
+      </View>
+
+      <View style={styles.shadowLineStyle} />
+
+
+      <View
+        style={{
+          alignItems: "center",
+          flexDirection: 'row',
+          marginTop: 30,
+        }}>
+        <Text
+          style={{
+            fontSize: 26,
+            marginLeft: 20,
+            color: colors.WHITE
+
+          }}>
+          hello {global.firstname}, 
+          <Text
+          style={{
+            fontSize: 14,
+            marginLeft: 20,
+            color: colors.WHITE
+
+          }}>
+          {"\n"}you can request for new plant
           </Text>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => navigation.navigate('Draw roof')}>
-            <Text>Draw roof</Text>
-          </TouchableOpacity>
-        </View>
+          </Text>
+        <TouchableOpacity
+          style={styles.buttonStyle}
+          onPress={() => navigation.navigate('DrawRoofScreen')}>
+          <Text style={styles.buttonTextStyle} >Draw roof</Text>
+        </TouchableOpacity>
+
 
       </View>
 
@@ -281,30 +444,97 @@ const FirstPage = ({ props, navigation }) => {
 
 
 
-      <Container style={{ padding: 15 }}>
-        <View>
-          <Text style={{
-            fontSize: 18,
-            textAlign: 'center',
-            padding: 20
 
-          }}>
-            e-Procurement Sites
+      <View>
+        <Text style={{
+          fontSize: 20,
+          textAlign: 'center',
+          color: colors.CRED_FONT_BRONZE,
+          
+          margin:15,
+
+        }}>
+          Your Site List
             </Text>
-        </View>
-        <Content>
+      </View>
+      <Content style={{marginBottom:20}}>
 
-          {renderpostTypes()}
-        </Content>
-      </Container>
+        {renderpostTypes()}
+      </Content>
+
     </SafeAreaView>
 
 
 
   )
 }
-
+var height = Dimensions.get('window').height;
 const styles = StyleSheet.create({
+
+  mainContainer: {
+    backgroundColor: colors.CRED_HOME_BLACK,
+    flex: 1,
+
+  },
+
+  headerStyleImage: {
+    backgroundColor: colors.CRED_HOME_BLACK,
+    height: 60,
+    margin: -5,
+  },
+  iconContainerLeft: {
+    flex: 1,
+    height: 120,
+    width: 120,
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop:40,
+    
+  },
+  iconImageContainerLeft: {
+    height: 120,
+    width: 120,
+    resizeMode: 'contain',
+    justifyContent:'center'
+  },
+  iconContainerRight: {
+    flex: 1,
+    height: 80,
+    width: 80,
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  iconImageContainer: {
+    height: 50,
+    width: 50,
+    resizeMode: 'contain',
+  },
+  headerImageText: {
+    fontWeight: "bold",
+    textDecorationStyle: "solid",
+    fontSize: 12,
+    color: colors.DARK_GREY,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  roundrectangleContainer:
+  {
+
+    backgroundColor: colors.CRED_CARD_BACKGROUND,
+    paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+    borderRadius: 20,
+    overflow: "hidden",
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 20,
+  },
+  backgroundContainer:
+  {
+
+    backgroundColor: colors.CRED_CARD_BACKGROUND,
+   
+  },
+
   button: {
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
@@ -317,6 +547,18 @@ const styles = StyleSheet.create({
     borderColor: '#DDDDDD',
     margin: 10,
   },
+  shadowLineStyle: {
+    borderColor: colors.WHITE,
+    shadowColor: colors.WHITE,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
+    marginBottom: 20,
+  },
   activityIndicator: {
     alignItems: 'center',
     height: 80,
@@ -326,18 +568,42 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
-    height: 45,
-    width: 80,
+    height: 35,
+    width: 100,
     alignItems: 'center',
-    borderRadius: 30,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
   buttonTextStyle: {
-    color: '#000000',
-    fontSize: 16,
+    color: colors.BLACK,
+    fontSize: 14,
+    marginTop: 7,
+    alignItems: 'center',
   },
+  underLineText: {
+    textDecorationLine: 'underline',
+    color: colors.BLUE
+  },
+
+  boldText: {
+    fontWeight: "bold",
+    textDecorationStyle: "solid",
+    fontSize: 12,
+    color: colors.LIGHT_GREY_FONT
+  }
+
+
 });
 export default FirstPage;

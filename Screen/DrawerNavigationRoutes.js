@@ -10,11 +10,11 @@ import { createDrawerNavigator } from 'react-navigation-drawer';
 
 //Import External Screens
 import HomeScreen from './drawerScreens/HomeScreen';
-import SettingsScreen from './drawerScreens/SettingsScreen';
+import SettingsScreen from './drawerScreens/AboutUs';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import ContactUs from './drawerScreens/ContactUs';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
-import EditProfile from './EditProfile';
+//import EditProfile from './EditProfile';
 
 const FirstActivity_StackNavigator = createStackNavigator({
   First: {
@@ -30,7 +30,7 @@ const FirstActivity_StackNavigator = createStackNavigator({
   },
 });
 
-const EditProfileActivity_StackNavigator = createStackNavigator({
+/*const EditProfileActivity_StackNavigator = createStackNavigator({
   First: {
     screen: EditProfile,
     navigationOptions: ({ navigation }) => ({
@@ -42,7 +42,7 @@ const EditProfileActivity_StackNavigator = createStackNavigator({
       headerTintColor: '#fff',
     }),
   },
-});
+});*/
 
 const SecondActivity_StackNavigator = createStackNavigator({
   First: {
@@ -81,12 +81,12 @@ const DrawerNavigatorRoutes = createDrawerNavigator(
       },
     },
 
-    EditProfile: {
+    /*EditProfile: {
       screen: EditProfileActivity_StackNavigator,
       navigationOptions: {
         drawerLabel: 'Edit Profile',
       },
-    },
+    },*/
     SettingsScreen: {
       screen: SecondActivity_StackNavigator,
       navigationOptions: {

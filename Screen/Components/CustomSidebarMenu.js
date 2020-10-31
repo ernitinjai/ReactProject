@@ -17,10 +17,10 @@ const CustomSidebarMenu = props => {
       navOptionName: 'Home Screen',
       screenToNavigate: 'HomeScreen',
     },
-    {
+    /*{
       navOptionName: 'Edit Profile',
       screenToNavigate: 'EditProfile',
-    },
+    },*/
     {
       navOptionName: 'About eSunScope',
       screenToNavigate: 'SettingsScreen',

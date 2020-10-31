@@ -346,7 +346,7 @@ const OtpVerification = function(props) {
               placeholderTextColor={colors.LIGHT_GREY_FONT}
               autoCompleteType='password'
               returnKeyType="next"
-              style={[styles.passwordText]}
+              style={styles.passwordText}
               
             />
           </View>
@@ -442,6 +442,7 @@ const OtpVerification = function(props) {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: colors.DARK_GREY,
     padding: 16,
     flex: 1,
   },
@@ -465,10 +466,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   passwordText: {
-    
+    backgroundColor: colors.WHITE,
     textDecorationColor: colors.BLUE,
     fontSize: 18,
     width: '100%',
+    height: 45,
+   
   },
   spacer:{
     marginTop:20,

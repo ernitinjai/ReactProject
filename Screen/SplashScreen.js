@@ -2,10 +2,10 @@
 /* https://aboutreact.com/react-native-login-and-signup/ */
 
 //Import React and Hooks we needed
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment  } from 'react';
 
 //Import all required component
-import { ActivityIndicator, View, StyleSheet, Image } from 'react-native';
+import { ActivityIndicator, View, StyleSheet, Image ,SafeAreaView, ScrollView, Text, StatusBar, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import colors from './common/colors';
 
@@ -16,27 +16,32 @@ const SplashScreen = props => {
   useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
-      //Check if user_id is set or not
-      //If not then send for Authentication
-      //else send to Home Screen
-      /*AsyncStorage.setItem('user_id', first.data.id);
-          AsyncStorage.setItem('username', first.data.username);
-          AsyncStorage.setItem('mobile', first.data.mobile);
-          AsyncStorage.setItem('firstname', first.data.firstname);*/
-
       AsyncStorage.getItem('user_id').then((value) => {
         global.user_id = value
-        AsyncStorage.getItem('username').then(value =>global.username = value);
-        AsyncStorage.getItem('firstname').then(value =>global.firstname = value);
-        AsyncStorage.getItem('lastname').then(value =>global.lastname = value);
-        AsyncStorage.getItem('mobile').then(value =>global.mobile = value);
+        AsyncStorage.getItem('username').then(value => global.username = value);
+        AsyncStorage.getItem('firstname').then(value => global.firstname = value);
+        AsyncStorage.getItem('lastname').then(value => global.lastname = value);
+        AsyncStorage.getItem('mobile').then(value => global.mobile = value);
+        AsyncStorage.getItem('email').then(value => global.email = value);
 
         props.navigation.navigate(
-          value === null ? 'Auth' : 'DrawerNavigationRoutes'
+          value === null ? 'Auth' : 'MainScreen'
         )
       });
     }, 3000);
   }, []);
+
+  /*let pushData = [
+    {
+      title: "First push",
+      message: "First push message"
+    },
+    {
+      title: "Second push",
+      message: "Second push message"
+    }
+  ]*/
+  
 
   return (
     <View style={styles.container}>
@@ -50,12 +55,16 @@ const SplashScreen = props => {
         size="large"
         style={styles.activityIndicator}
       />
+
     </View>
+
+
   );
 };
 export default SplashScreen;
 
 const styles = StyleSheet.create({
+  
   container: {
     flex: 1,
     alignItems: 'center',

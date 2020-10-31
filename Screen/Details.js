@@ -1,6 +1,6 @@
 // React Native Tab - Example using React Navigation V5 //
 // https://aboutreact.com/react-native-tab //
-import React, { Component, useState, useEffect } from 'react'
+import React, { Component, useState, useEffect } from 'react';
 import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, ScrollView, Image } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
 import colors from './common/colors';
@@ -9,8 +9,8 @@ import { FlatGrid } from 'react-native-super-grid';
 
 const Details = ({ navigation }) => {
 
-    
-   
+
+
     let [animating, setLoading] = useState(false);
     let [errortext, setErrortext] = useState('');
     const [eData, setResponseDataState] = useState([]);
@@ -26,12 +26,19 @@ const Details = ({ navigation }) => {
 
     ]);
 
-   
+    const [buttons, setButtonItems] = useState([
+        { name: 'Feasibility Report' },
+        { name: 'View Quotes' },
+        { name: 'Purchase Orders' },
+        { name: 'Project Implementation' },
+    ]);
+
+
 
     useEffect(() => {
         setLoading(true);
 
-        
+
 
         var _userId;
         /*AsyncStorage.getItem('user_id').then((userId) => {
@@ -228,11 +235,11 @@ const Details = ({ navigation }) => {
         let post = [];
         post.push(
             <View style={styles.header}>
-                
-                <Text > Congratulations!</Text>
+
+                <Text style={styles.bigTextStyle}> Congratulations!</Text>
                 <Text >
-        Solar can save you INR {global.saving}/year
-    Payback in about {global.payback_period} years </Text>
+                    Solar can save you INR <Text style={styles.bigTextStyle}>{global.saving}</Text>/year
+    Payback in about <Text style={styles.bigTextStyle}>{global.payback_period}</Text> years </Text>
             </View>
 
         )
@@ -240,12 +247,75 @@ const Details = ({ navigation }) => {
 
     }
 
+    let drawUserNameAndInquiryHeader = () => {
+        let post = [];
+        post.push(
+            
+
+                <Card >
+                    <CardItem style={styles.nameandinquiryheader}>
+                    <Left>
+                        <Text style={styles.nameandinquiryheaderTextStyle}>{global.username}</Text>
+                    </Left>
+                    <Right>
+                        <Text style={styles.nameandinquiryheaderTextStyle}>{global.inquiry_nu}</Text> 
+                    </Right>
+                    </CardItem>
+                </Card>
+           
+
+        )
+        return post;
+
+    }
+
+
+ function handleButtonPress(name){
+    
+    if (name === "View Quotes") {
+        //alert("Create bid screen");
+        navigation.navigate('BidsList');
+        
+      } else if (name === "Feasibility Report") {
+        navigation.navigate('FeasibilityStudy');
+      } else if(name === "Purchase Orders"){
+        navigation.navigate('PurchaseOrder');
+        //alert("We will notify you as soon as possible");
+      }else if(name === "Project Implementation"){
+        navigation.navigate('ProjectImplementation');
+        //alert("We will notify you as soon as possible");
+      }
+
+ }
+
+ 
 
 
 
     return (
 
         <ScrollView style={{ flex: 1 }}>
+
+            {drawUserNameAndInquiryHeader()}
+
+
+            <FlatGrid
+                itemDimension={130}
+                data={buttons}
+                style={styles.gridView}
+                // staticDimension={300}
+                // fixed
+                spacing={10}
+                renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={[styles.buttonStyle]}
+                            onPress={() => handleButtonPress(item.name)}>
+                            <Text style={styles.itemName}>{item.name}</Text>
+                           
+                        </TouchableOpacity>
+                )}
+            />
+
             {renderHeader()}
             {
 
@@ -299,7 +369,7 @@ const Details = ({ navigation }) => {
                 )}
             />
 
-            <Container style={{ padding: 15 }}>
+            <View style={{ padding: 15 }}>
                 {
                     <View>
                         <Text style={{
@@ -312,13 +382,13 @@ const Details = ({ navigation }) => {
             </Text>
                     </View>
                 }
-                <Content >
+                <View >
 
                     {renderpostTypes()}
                     <Text> Disclaimer : These are estimated figures only and subject to change depending on solar panel technology, type selected and real site scenario. Our technical team will contact you for accurate estimates. </Text>
 
-                </Content>
-            </Container>
+                </View>
+            </View>
 
 
 
@@ -351,19 +421,34 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         color: '#FFFFFF',
         borderColor: '#7DE24E',
-        height: 45,
-        width: 80,
         alignItems: 'center',
-        borderRadius: 30,
-        marginLeft: 35,
-        marginRight: 35,
-        marginTop: 20,
-        marginBottom: 20,
-    },
-    buttonTextStyle: {
-        color: '#000000',
-        fontSize: 16,
-    },
+        borderRadius: 10,
+        justifyContent: 'center',
+        borderRadius: 5,
+        padding: 10,
+        height: 40,
+        margin: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+    
+        elevation: 4,
+      },
+      buttonTextStyle: {
+        color: colors.BLACK,
+        fontSize: 14,
+        marginTop: 7,
+        alignItems: 'center',
+      },
+
+      bigTextStyle: {
+        color: colors.GREY,
+        fontSize: 22,
+      },
     rowContainer: {
         flex: 1,
         flexDirection: "row",
@@ -377,7 +462,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 5,
         padding: 10,
-        height: 100,
+        height: 70,
         margin: 10,
     },
     header: {
@@ -391,7 +476,21 @@ const styles = StyleSheet.create({
         fontWeight: '800',
     },
 
-    
+    nameandinquiryheader: {
+        backgroundColor: colors.CRED_BLACK,
+        justifyContent: 'center',
+        height: 50,
+        color: colors.CRED_FONT_BRONZE,
+        fontWeight: '800',
+    },
+
+    nameandinquiryheaderTextStyle: {
+        color: colors.CRED_FONT_BRONZE,
+        fontSize: 16,
+      },
+
+
+
     itemName: {
         fontSize: 16,
         color: '#000',
@@ -408,9 +507,9 @@ const styles = StyleSheet.create({
     },
     itemCode: {
         fontWeight: '600',
-        fontSize: 12,
+        fontSize: 20,
         alignSelf: 'center',
-        color: colors.DARK_GREY_FONT,
+        color: colors.CRED_FONT_BRONZE,
     },
     itemImage: {
         justifyContent: 'center',

@@ -15,49 +15,47 @@ import {
   Keyboard,
   TouchableOpacity,
   ScrollView,
+  AsyncStorage,
+  Dimensions,
   Alert,
 } from 'react-native';
 import CountryPicker from 'rn-country-picker';
 import Loader from './Components/loader';
 import colors from './common/colors';
+import RNPasswordStrengthMeter, {
+  BarPasswordStrengthDisplay,
+  BoxPasswordStrengthDisplay,
+  CircularPasswordStrengthDisplay,
+  TextPasswordStrengthDisplay,
+} from 'react-native-password-strength-meter';
 
-const EditProfile = props => {
 
+const RegisterScreen = props => {
   
-  
-  let [userName, setUserName] = useState(global.username);
-  let [userFirstName, setUserFirstName] = useState(global.firstname);
-  let [userLastName, setUserLastName] = useState(global.lastname);
-  let [userEmail, setUserEmail] = useState("");
-  let [userMobileNumber, setUserMobileNumber] = useState(global.mobile);
-  let [errortext, setErrortext] = useState('');
-  /*let [userCountryCode, setUserCountryCode] = useState('+91');
+  //let [userName, setUserName] = useState('');
+  let [userFirstName, setUserFirstName] = useState('');
+  let [userLastName, setUserLastName] = useState('');
+  //let [userEmail, setUserEmail] = useState('');
+  //let [userMobileNumber, setUserMobileNumber] = useState('');
+  //let [userCountryCode, setUserCountryCode] = useState('+91');
   let [userPassword, setUserPassword] = useState('');
   let [userConfirmPassword, setUserConfirmPassword] = useState('');
   let [loading, setLoading] = useState(false);
   let [errortext, setErrortext] = useState('');
   let [isRegistraionSuccess, setIsRegistraionSuccess] = useState(false);
 
-  _selectedValue = (index) => {
+  /*_selectedValue = (index) => {
     setUserCountryCode({mCountryCode: index});
-  };
+  };*/
 
   const handleSubmitButton = () => {
 
     setErrortext(''); 
-    var dataToSend = {
-      username: userName,
-      firstname: userFirstName,
-      lastname: userLastName,
-      mobile: userMobileNumber,
-      countrycode: userCountryCode,
-      email: userEmail,
-      password: userPassword,
-    };
-    if (!userName) {
+    
+    /*if (!userName) {
       alert('Please fill Name');
       return;
-    }
+    }*/
     if (!userFirstName) {
       alert('Please fill Name');
       return;
@@ -66,38 +64,40 @@ const EditProfile = props => {
       alert('Please fill last name');
       return;
     }
-    if (!userEmail) {
-      alert('Please fill Email');
+    /*if (!userEmail && !userMobileNumber) {
+      alert('Please fill Email or Mobile Number');
       return;
-    }
-    if (!userMobileNumber) {
+    }*/
+    /*if (!userMobileNumber) {
       alert('Please fill Mobile number');
       return;
-    }
-    if (!userCountryCode) { 
+    }*/
+    /*if (!userCountryCode) { 
       alert('Please Enter Country code');
       return;
-    } 
+    } */
     if (!userPassword) {
       alert('Please fill Password');
       return;
     }
 
-    if (userPassword !== userConfirmPassword) {
-      alert('Password doesnt match');
+    if (!userConfirmPassword) {
+      alert('Please fill New Password');
       return;
     }
     //Show Loader
     setLoading(true);
 
     var dataToSend = {
-      username: userName,
+      user_id:global.user_id,
+      //username: userName,
       firstname: userFirstName,
       lastname: userLastName,
-      mobile: userMobileNumber,
-      countrycode: userCountryCode,
-      email: userEmail,
-      password: userPassword,
+      //mobile: userMobileNumber,
+      //countrycode: userCountryCode,
+      //email: userEmail,
+      oldpassword: userPassword,
+      newpassword: userConfirmPassword,
     };
 
     var formBody = [];
@@ -108,7 +108,7 @@ const EditProfile = props => {
     }
     formBody = formBody.join('&');
     console.log(formBody);
-    fetch('http://esunscope.org/cms/api/user/userreg', {
+    fetch('https://esunscope.org/cms/api/user/profileupdate', {
       method: 'POST',
       body: formBody,
       headers: {
@@ -120,23 +120,26 @@ const EditProfile = props => {
       .then(responseJson => {
         //Hide Loader
         setLoading(false);
-        const first = responseJson[0];
-        if(first.username !=null )
-        {
-          setIsRegistraionSuccess(false);
-          setErrortext(first.username);
-        }
-        if(first.email !=null )
-        {
-          setIsRegistraionSuccess(false);
-          setErrortext(first.email);
-        }
-        // If server response message same as Data Matched
-        if (first.msg != null) {
-          setIsRegistraionSuccess(true);
+        
+        if (responseJson[0].status == "success") {
+          
+          AsyncStorage.setItem('user_id', responseJson[0].data.user_id);
+          AsyncStorage.setItem('username', responseJson[0].data.username);
+          AsyncStorage.setItem('mobile', responseJson[0].data.mobile);
+          AsyncStorage.setItem('firstname', responseJson[0].data.firstname);
+          AsyncStorage.setItem('lastname', responseJson[0].data.lastname);
+          AsyncStorage.setItem('email', responseJson[0].data.email);
+          global.user_id = responseJson[0].data.user_id;  
+          global.username = responseJson[0].data.username;
+          global.firstname = responseJson[0].data.firstname;
+          global.lastname = responseJson[0].data.lastname;
+          global.mobile = responseJson[0].data.mobile;
+          global.email=responseJson[0].data.email;
           console.log('Registration Successful. Please Login to proceed');
+          setIsRegistraionSuccess(true);
         } else {
           setIsRegistraionSuccess(false);
+          alert("" + JSON.stringify(responseJson));
           setErrortext('Registration Unsuccessful');
         }
       })
@@ -144,7 +147,7 @@ const EditProfile = props => {
         //Hide Loader
         setLoading(false);
         
-        console.error("error ${error}");
+        //console.error("error ${error}");
       });
   };
   if (isRegistraionSuccess) {
@@ -168,10 +171,10 @@ const EditProfile = props => {
         </TouchableOpacity>
       </View>
     );
-  }*/
+  }
   return (
     <View style={styles.container}>
-      
+      <Loader loading={loading} />
       <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center' }}>
           <Image
@@ -185,30 +188,17 @@ const EditProfile = props => {
           />
         </View>
         <KeyboardAvoidingView enabled>
+
+        <View style={styles.roundrectangleContainer}>
+          
           <View style={styles.SectionStyle}>
-            <TextInput
-              value={userName}
-              style={styles.inputStyle}
-              onChangeText={username => setUserName(username)}
-              placeholder="User Name"
-              placeholderTextColor={colors.LIGHT_GREY_FONT}
-              autoCompleteType='username'
-              
-              returnKeyType="next"
-              /*onSubmitEditing={() =>
-                this._userlastnameinput && this._userlastnameinput.focus()
-              }*/
-              blurOnSubmit={false}
-            />
-          </View>
-          <View style={styles.SectionStyle}>
-            <TextInput
-              value = {userFirstName}
-              style={styles.inputStyle}
+            <TextInput  style={styles.textInputStyle}
+              defaultValue ={global.firstname}
               onChangeText={UserFirstName => setUserFirstName(UserFirstName)}
-              placeholder="Enter Name"
+              placeholder="Enter First Name"
               placeholderTextColor={colors.LIGHT_GREY_FONT}
               returnKeyType="next"
+              
               /*onSubmitEditing={() =>
                 this._userlastnameinput && this._userlastnameinput.focus()
               }*/
@@ -216,9 +206,8 @@ const EditProfile = props => {
             />
           </View>
           <View style={styles.SectionStyle}>
-            <TextInput
-              value = {userLastName}
-              style={styles.inputStyle}
+            <TextInput style={styles.textInputStyle}
+              defaultValue ={global.lastname}
               onChangeText={userLastName => setUserLastName(userLastName)}
               placeholder="Enter Last Name"
               placeholderTextColor={colors.LIGHT_GREY_FONT}
@@ -233,10 +222,24 @@ const EditProfile = props => {
             />
           </View>
           <View style={styles.SectionStyle}>
-            <TextInput
-            value = {userEmail}
-              style={styles.inputStyle}
-              onChangeText={UserEmail => setUserEmail(UserEmail)}
+            <TextInput style={styles.textInputStyle}
+              value ={global.username}
+              onChangeText={username => setUserName(username)}
+              placeholder="User Name"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='username'
+              returnKeyType="next"
+              editable={false}
+              /*onSubmitEditing={() =>
+                this._userlastnameinput && this._userlastnameinput.focus()
+              }*/
+              blurOnSubmit={false}
+            />
+          </View>
+          <View style={styles.SectionStyle}>
+            <TextInput style={styles.textInputStyle}
+              value ={global.email}
+              //onChangeText={UserEmail => setUserEmail(UserEmail)}
               placeholder="Enter Email "
               placeholderTextColor={colors.LIGHT_GREY_FONT}
               keyboardType="email-address"
@@ -253,12 +256,29 @@ const EditProfile = props => {
           
 
           <View style={styles.SectionStyle}>
-
           
-            <TextInput
-              value={userMobileNumber}
-              style={styles.inputStyle}
-              onChangeText={userMobileNumber => setUserMobileNumber(userMobileNumber)}
+          <CountryPicker 
+          disable={true}
+          animationType={'slide'}
+          containerStyle={styles.pickerStyle}
+          pickerTitleStyle={styles.pickerTitleStyle}
+          selectedCountryTextStyle={styles.selectedCountryTextStyle}
+          countryNameTextStyle={styles.countryNameTextStyle}
+          pickerTitle={'Country Picker'}
+          searchBarPlaceHolder={'Search......'}
+          hideCountryFlag={false}
+          hideCountryCode={false}
+          searchBarStyle={styles.searchBarStyle}
+          backButtonImage={require('../Images/ic_back_black.png')}
+          searchButtonImage={require('../Images/ic_search.png')}
+          dropDownImage={require('../Images/ic_drop_down.png')}
+          //countryCode={this.state.mCountryCode}
+          selectedValue={userCountryCode =>setUserCountryCode(userCountryCode)}
+        />
+       
+            <TextInput  style={styles.mobileInputStyle}
+              value ={global.mobile}
+              //onChangeText={userMobileNumber => setUserMobileNumber(userMobileNumber)}
               placeholder="Enter Mobile number"
               placeholderTextColor={colors.LIGHT_GREY_FONT}
               autoCompleteType='tel'
@@ -271,7 +291,46 @@ const EditProfile = props => {
               blurOnSubmit={false}
             />
           </View>
-          
+         
+          <View style={styles.SectionStyle}>
+            <TextInput style={styles.textInputStyle}
+              
+              onChangeText={userPassword => setUserPassword(userPassword)}
+              placeholder="Enter Old Password"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              autoCompleteType='password'
+              keyboardType="default"
+              secureTextEntry={true}
+              /*ref={ref => {
+                this._passwordinput = ref;
+              }}
+              onSubmitEditing={() =>
+                this._userConfirmPasswordinput && this._userConfirmPasswordinput.focus()
+              }*/
+              blurOnSubmit={false}
+            />
+          </View>
+           <View style={styles.passwordStrengthStyle}>
+           <TextPasswordStrengthDisplay
+          password={userConfirmPassword}
+        />
+         </View>
+          <View style={styles.SectionStyle}>
+            <TextInput style={styles.textInputStyle}
+              
+              onChangeText={userConfirmPassword => setUserConfirmPassword(userConfirmPassword)}
+              placeholder="Enter new Password"
+              placeholderTextColor={colors.LIGHT_GREY_FONT}
+              /*ref={ref => {
+                this._userConfirmPasswordinput = ref;
+              }}*/
+              returnKeyType="next"
+              autoCompleteType='password'
+              onSubmitEditing={Keyboard.dismiss}
+              blurOnSubmit={false}
+              secureTextEntry={true}
+            />
+          </View>
           {errortext != '' ? (
             <Text style={styles.errorTextStyle}> {errortext} </Text>
           ) : null}
@@ -279,68 +338,106 @@ const EditProfile = props => {
             style={styles.buttonStyle}
             activeOpacity={0.5}
             onPress={() => handleSubmitButton()}>
-            <Text style={styles.buttonTextStyle}>UPDATE</Text>
+            <Text style={styles.buttonTextStyle}>UPDATE PROFILE</Text>
           </TouchableOpacity>
+          </View>
         </KeyboardAvoidingView>
       </ScrollView>
     </View>
   );
 };
-export default EditProfile;
-
+export default RegisterScreen;
+var height = Dimensions.get('window').height; 
 const styles = StyleSheet.create({
   container: {
     flex:1,
     justifyContent: 'center',
     backgroundColor: colors.BACKGROUND
   },
-  
-  SectionStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    marginLeft: 30,
-    marginRight: 30,
-    margin: 10,
+
+  roundrectangleContainer:
+  {
+    flex: 1,
+    backgroundColor: colors.DARK_GREY,
+    paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+    height: height*.80,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    overflow: "hidden"
   },
 
-  SectionMobileNumberStyle: {
-    flexDirection: 'row',
-    height: 40,
-    marginTop: 20,
-    
-    marginRight: 35,
-    justifyContent: 'space-between'
+  contrycontainer: {
+    flex:1,
+    justifyContent: 'center',
+    backgroundColor: colors.BACKGROUND,
+    marginTop:20
   },
+  
+  SectionStyle: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    height: 45,
+    marginTop: 20,
+    marginLeft: 35,
+    marginRight: 35,
+    margin: 10,
+    borderRadius: 15,
+    backgroundColor: colors.WHITE,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5,
+    elevation: 1,
+  },
+
   buttonStyle: {
+    flex:1,
     backgroundColor: colors.APP_YELLOW,
     borderWidth: 0,
-    color: '#FFFFFF',
-    borderColor: '#7D624E',
+    color: colors.FONT_COLOR_ON_YELLOW,
+    borderColor: colors.BOARDER,
     height: 40,
     alignItems: 'center',
+    justifyContent:'center',
     
     marginLeft: 35,
     marginRight: 35,
     marginTop: 20,
     marginBottom: 20,
+    borderColor: colors.CRED_BLACK,
+    shadowColor: colors.CRED_BLACK,
+    borderRadius: 15,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+    elevation: 4,
   },
   buttonTextStyle: {
-    color: colors.WHITE,
+    color: colors.FONT_COLOR_ON_YELLOW,
     paddingVertical: 10,
     fontSize: 18,
     fontWeight:'bold'
+    
   },
-  inputStyle: {
-    flex: 1,
-    color: colors.LIGHT_GREY_FONT,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderWidth: 1,
-    fontSize:18,
-    backgroundColor: colors.WHITE,
-    borderColor: colors.BOARDER,
+
+  textInputStyle: {
+    width:300,
+    color: colors.CRED_BLACK,
+    paddingVertical: 10,
+    fontSize: 18,
+    fontWeight:'bold',
+    
+    
   },
+  
   errorTextStyle: {
     color: 'red',
     textAlign: 'center',
@@ -361,19 +458,16 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     borderColor: colors.BOARDER,
+    
   },
   pickerStyle: {
     
     color: 'white',
-    marginLeft:35,
-    marginRight:35,
     height:40,
-    width:100,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: colors.BOARDER,
-    
+    width:120,
+    justifyContent: 'center',
   },
+
   selectedCountryTextStyle: {
     paddingLeft: 5,
     paddingRight: 5,
@@ -386,12 +480,23 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'right',
   },
- 
-  searchBarStyle: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    marginLeft: 8,
-    marginRight: 10,
+
+  passwordStrengthStyle: {
+    width:200,
+    color: colors.CRED_BLACK,
+    paddingVertical: 10,
+    fontSize: 18,
+    fontWeight:'bold',
+    
+  },
+
+  mobileInputStyle: {
+    width:200,
+    color: colors.CRED_BLACK,
+    paddingVertical: 10,
+    fontSize: 18,
+    fontWeight:'bold',
+    
+    
   },
 });

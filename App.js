@@ -2,21 +2,23 @@
 /* https://aboutreact.com/react-native-login-and-signup/ */
 
 //Import React
-import React from 'react';
+import React, {Component} from 'react';
 
 //Import Navigators from React Navigation
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import auth from '@react-native-firebase/auth';
 
 //Import all the screens needed
 import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import ForgotPassword from './Screen/ForgotPassword';
-import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import MainScreen from './Screen/MainScreen'
+//import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import OtpVerification from './Screen/OtpVerification';
-import DrawRoofScreen from './Screen/DrawRoofScreen';
+
+
+
 
 const Auth = createStackNavigator({
   //Stack Navigator for Login and Sign up Screen
@@ -58,6 +60,96 @@ const Auth = createStackNavigator({
     },
   },
   
+  // FirstPage: {
+  //   /* SplashScreen which will come once for 5 Seconds */
+  //   screen: FirstPage,
+  //   navigationOptions: {
+  //     /* Hiding header for Splash Screen */
+  //     headerShown: false,
+  //   },
+  // },
+  // SecondPage: {
+  //   /* SplashScreen which will come once for 5 Seconds */
+  //   screen: SecondPage,
+  //   navigationOptions: {
+  //     /* Hiding header for Splash Screen */
+  //     headerShown: false,
+  //   },
+  // },
+  // EditProfile: {
+  //   screen: EditProfile,
+  //   navigationOptions: {
+  //     title: 'Edit Profile',
+  //     headerShown: true,
+  //   },
+  // },
+  // DrawRoofScreen: {
+  //   screen : DrawRoofScreen,
+  //   navigationOptions: {
+  //     title: 'Draw Roof',
+  //     headerStyle: {
+  //       backgroundColor: '#F5BA1B',
+  //     },
+  //     headerTintColor: '#fff',
+  //   },
+  // },
+
+  // NewInquiry: {
+  //   screen: NewInquiry,
+  //   navigationOptions: {
+  //     title: 'New Inquiry',
+  //     headerShown: true,
+  //   },
+  // },
+        
+  //   Details: {
+  //   screen: Details,
+  //   navigationOptions: {
+  //     title: 'Details',
+  //     headerShown: true,
+  //   },
+  // },
+
+  // FeasibilityStudy: {
+  //   screen: FeasibilityStudy,
+  //   navigationOptions: {
+  //     title: 'Feasibility Study',
+  //     headerShown: true,
+  //   },
+  // },
+
+  // PurchaseOrder: {
+  //   screen: PurchaseOrder,
+  //   navigationOptions: {
+  //     title: 'Purchase Order',
+  //     headerShown: true,
+  //   },
+  // },
+
+  // BiddingStatus: {
+  //   screen: BiddingStatus,
+  //   navigationOptions: {
+  //     title: 'BiddingStatus',
+  //     headerShown: true,
+  //   },
+  // },
+
+  // BidsList: {
+  //   screen: BidsList,
+  //   navigationOptions: {
+  //     title: 'BidsList',
+  //     headerShown: true,
+  //   },
+  // },
+
+  // ProjectImplementation: {
+  //   screen: ProjectImplementation,
+  //   navigationOptions: {
+  //     title: 'Project Implementation',
+  //     headerShown: true,
+  //   },
+  // },
+
   
 });
 
@@ -76,25 +168,25 @@ const App = createSwitchNavigator({
     /* Auth Navigator which includer Login Signup will come once */
     screen: Auth,
   },
-  DrawerNavigationRoutes: {
-    /* Navigation Drawer as a landing page */
-    screen: DrawerNavigationRoutes,
+  MainScreen: {
+    
+    screen: MainScreen,
     navigationOptions: {
-      /* Hiding header for Navigation Drawer as we will use our custom header */
-      headerShown: true,
+      headerShown: false,
       
     },
   },
-  DrawRoofScreen: {
-    screen : DrawRoofScreen,
+  
+  /*DrawerNavigationRoutes: {
+    
+    screen: DrawerNavigationRoutes,
     navigationOptions: {
-      title: 'Draw Roof',
-      headerStyle: {
-        backgroundColor: '#F5BA1B',
-      },
-      headerTintColor: '#fff',
+      
+      headerShown: true,
+      
     },
-  },
+  },*/
+  
 });
 
 export default createAppContainer(App);

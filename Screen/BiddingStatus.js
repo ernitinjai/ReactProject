@@ -4,10 +4,6 @@ import React, { Component, useState, useEffect } from 'react'
 import { ActivityIndicator, TouchableOpacity, StyleSheet, View, Text, ScrollView, Image } from 'react-native';
 import { Container, Header, Content, Card, CardItem, Thumbnail, Button, Icon, Left, Body, Right } from 'native-base';
 import colors from './common/colors';
-import AsyncStorage from '@react-native-community/async-storage';
-import { FlatGrid } from 'react-native-super-grid';
-import RadioGroup from 'react-native-radio-button-group';
-import { TextInput } from "react-native-gesture-handler";
 
 const BiddingStatus = ({ navigation }) => {
 
